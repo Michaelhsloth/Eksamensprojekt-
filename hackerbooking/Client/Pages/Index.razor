@@ -2,7 +2,7 @@
 @using hackerbooking.Shared;
 @inject HttpClient Http
 
-            @if (vagter == null)
+@if (vagter == null)
         {
             <p><em>the end is closer than you think</em></p>
         }
@@ -10,25 +10,29 @@
        
         else
         {
-            <h2>Lille app til at demonstrere hvordan man bygger en controller samt service layer med simpel CRUD funktionalitet VHA. Dapper og C# </h2>
+<span>Opgave: 
+        @foreach (var item in opgaver)
+        {
+            <br>
+            <input type="radio" id="@item.opgnavn" name="opgaver" value=@item.opgnavn @onchange="@(() => UpdateOpgave(@item.opgnavn))">
+            <label for="html">@item.opgnavn</label>
+        }    
 
-            <p>I disse felter kan man skrive et input, ønsker man at uploade det til databasen trykker man blot på "POST DIS"</p>
-            <p>ønsker man at ændre i en entry, skriver man blot inde i den givne entry's felter og trykker herefter på "EDIT DIS"</p>
-            <input @bind-value="vagt.opgave" placeholder="string" />
-            <input type="datetime-local" placeholder="DateTime"/>            
-            <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">POST DIS</button>
+</span>
+           <br />
+           <span>Start Tidspunkt: </span>
+            <input type="datetime-local" @bind-value="vagt.start" placeholder="DateTime"/>    
+            <br/>
+            <span>Slut Tidspunkt: </span>
+            <input type="datetime-local" @bind-value="vagt.slut" placeholder="DateTime"/>
+            <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">POST</button>
             <p>Liste over entries</p>
             <table class="table table-responsive">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Type</th>
-                        <th>
-                            Edit
-                        </th>
-                        <th>
-                            Delete
-                        </th>
+                        <th>Opgave</th>
+                        <th>Start</th>
+                        <th>Slut</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,26 +40,30 @@
                     {
                     <tr>
                         <td>@item.opgave</td>
-                          <input @bind-value="vagt.opgave" placeholder="string" />
                         <td>@item.start</td>
-                          <input  @bind-value="vagt.start" placeholder="DateTime" />
+                        <td>@item.slut</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.id))">DELET DIS</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" @onclick="@(()=>patchVagt(@item.id))">EDIT DIS</button>
+                            <button class="btn btn-sm btn-primary" @onclick="@(()=>patchVagt(@item.id))">EDIT</button>
+                            <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.id))">DELETE</button>
                         </td>
                     </tr>
                     }
                 </tbody>
             </table>
         }
+
 @code{
     private TestDTO[] vagter;
+    private OpgaverDTO[] opgaver;
 
-    private TestDTO vagt = new TestDTO();
+    private TestDTO vagt = new();
+    private OpgaverDTO opgave = new();
+
+    private string tempOpgave;
+
     protected override async Task OnInitializedAsync(){
         vagter = await Http.GetFromJsonAsync<TestDTO[]>("api/Vagt");
+        opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
     }
     private async Task DeleteVagt(int id)
     {   
@@ -63,13 +71,20 @@
         await OnInitializedAsync();
     }
 
-private async Task postVagt(TestDTO vagt){
-    await Http.PostAsJsonAsync<TestDTO>("api/Vagt", vagt);
-    await OnInitializedAsync();
-}
-private async Task patchVagt(int id){
-    vagt.id = id; 
-    await Http.PutAsJsonAsync<TestDTO>($"api/Vagt/{id}", vagt);
-    await OnInitializedAsync();
-}
+    private async Task postVagt(TestDTO vagt){
+        var nyVagt = vagt;
+        nyVagt.opgave = tempOpgave;
+        await Http.PostAsJsonAsync<TestDTO>("api/Vagt", nyVagt);
+        await OnInitializedAsync();
+    }
+    private async Task patchVagt(int id){
+        vagt.id = id; 
+        await Http.PutAsJsonAsync<TestDTO>($"api/Vagt/{id}", vagt);
+        await OnInitializedAsync();
+    }
+
+    private void UpdateOpgave(string input)
+    {
+        tempOpgave = input;
+    }
 }

@@ -10,7 +10,6 @@ using hackerbooking.Server.Services;
 namespace hackerbooking.Server.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
 
     public class VagtController : ControllerBase
     {
@@ -21,27 +20,35 @@ namespace hackerbooking.Server.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("api/Vagt")]
         public List<TestDTO> getAllVagt()
         {
             //Console.WriteLine("api nået");
             return _service.getVagter();
 
         }
-        [HttpDelete("{id}")]
 
+        [HttpGet("api/Opgaver")]
+        public List<OpgaverDTO> GetAllOpgaver()
+        {
+            //Console.WriteLine("api nået");
+            return _service.GetOpgaver();
+
+        }
+
+        [HttpDelete("api/Vagt/{id}")]
         public async Task<IActionResult> DeleteVagt(int id)
         {  Console.WriteLine("api nået" + id);
             await _service.DeleteVagt(id);
             return NoContent();
         }
-        [HttpPost]
+        [HttpPost("api/Vagt")]
         public async Task<IActionResult> postVagt(TestDTO vagt)
         {
             await _service.postVagt(vagt);
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("api/Vagt/{id}")]
         public async Task<IActionResult> putVagt(TestDTO test)
         {
             await _service.putVagt(test);

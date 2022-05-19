@@ -32,6 +32,16 @@ namespace hackerbooking.Server.Services
                 return vagtList.ToList<TestDTO>();
             }
         }
+        public List<OpgaverDTO> GetOpgaver()
+        {
+            var sql = "SELECT * FROM opgaver";
+            using (var connection = connector.Connect())
+            {
+                var OpgaveList = connection.Query<OpgaverDTO>(sql);
+                //Console.WriteLine("service nået");
+                return OpgaveList.ToList<OpgaverDTO>();
+            }
+        }
 
         public async Task DeleteVagt(int id)
         {
@@ -47,8 +57,8 @@ namespace hackerbooking.Server.Services
 
         public async Task postVagt(TestDTO vagt)
         {
-            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start };
-            var sql = "INSERT INTO vagter (opgave, start) VALUES (@OPGAVE, @START)";
+            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start , SLUT = vagt.slut};
+            var sql = "INSERT INTO vagter (opgave, start, slut) VALUES (@OPGAVE, @START, @SLUT)";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
