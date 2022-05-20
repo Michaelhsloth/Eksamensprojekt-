@@ -1,13 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using hackerbooking.Server.Connector;
+﻿using hackerbooking.Server.Connector;
 using hackerbooking.Server.Services;
-using System.Linq;
 
 namespace hackerbooking.Server
 {

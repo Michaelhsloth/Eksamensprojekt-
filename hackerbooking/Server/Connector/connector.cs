@@ -1,6 +1,5 @@
-﻿using System.Data;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿using Npgsql;
+using System.Data;
 namespace hackerbooking.Server.Connector
 {
     public class DapperConnector

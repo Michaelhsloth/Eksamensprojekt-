@@ -1,7 +1,4 @@
-﻿using System;
-using Dapper;
-using Npgsql;
-namespace hackerbooking.Shared
+﻿namespace hackerbooking.Shared
 {
     public class TestDTO
     {

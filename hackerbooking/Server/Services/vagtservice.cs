@@ -1,13 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Dapper;
-using System.Collections.Generic;
-using Npgsql;
-using System.Data;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using hackerbooking.Shared;
+﻿using Dapper;
 using hackerbooking.Server.Connector;
+using hackerbooking.Shared;
 //data acess service til vagter -- til implementation i controlleren 
 //det her er man skriver sql queries til databasen 
 namespace hackerbooking.Server.Services
@@ -57,7 +50,7 @@ namespace hackerbooking.Server.Services
 
         public async Task postVagt(TestDTO vagt)
         {
-            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start , SLUT = vagt.slut};
+            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, SLUT = vagt.slut };
             var sql = "INSERT INTO vagter (opgave, start, slut) VALUES (@OPGAVE, @START, @SLUT)";
             using (var connection = connector.Connect())
             {
@@ -67,9 +60,9 @@ namespace hackerbooking.Server.Services
 
         public async Task putVagt(TestDTO vagt)
         {
-            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, ID = vagt.id };
+            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, SLUT = vagt.slut, ID = vagt.id };
             //Console.WriteLine($"{vagt.navn},{vagt.id},{vagt.tal}");
-            var sql = "UPDATE vagter SET opgave = @OPGAVE, start = @START WHERE id = @ID";
+            var sql = "UPDATE vagter SET opgave = @OPGAVE, start = @START, slut = @SLUT WHERE id = @ID";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);

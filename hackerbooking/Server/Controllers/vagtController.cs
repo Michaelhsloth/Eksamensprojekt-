@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using hackerbooking.Shared;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using hackerbooking.Server.Services;
+using hackerbooking.Shared;
+using Microsoft.AspNetCore.Mvc;
 
 namespace hackerbooking.Server.Controllers
 {
@@ -38,7 +33,8 @@ namespace hackerbooking.Server.Controllers
 
         [HttpDelete("api/Vagt/{id}")]
         public async Task<IActionResult> DeleteVagt(int id)
-        {  Console.WriteLine("api nået" + id);
+        {
+            Console.WriteLine("api nået" + id);
             await _service.DeleteVagt(id);
             return NoContent();
         }
@@ -49,9 +45,9 @@ namespace hackerbooking.Server.Controllers
             return NoContent();
         }
         [HttpPut("api/Vagt/{id}")]
-        public async Task<IActionResult> putVagt(TestDTO test)
+        public async Task<IActionResult> putVagt(TestDTO vagt)
         {
-            await _service.putVagt(test);
+            await _service.putVagt(vagt);
             return NoContent();
         }
     }
