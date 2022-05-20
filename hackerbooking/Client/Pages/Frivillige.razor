@@ -1,0 +1,23 @@
+﻿@page "/Frivillige"
+@using hackerbooking.Shared;
+@inject HttpClient Http
+
+<PageTitle>Frivillige</PageTitle>
+
+<h1>Liste Over Frivillige</h1>
+
+@if (frivillige == null)
+{
+    <p><em>Der er ingen frivillige</em></p>
+    <p><a href="OpretFrivillig">Opret Frivillig</a></p>
+}
+
+
+else
+{
+
+}
+
+@code {
+    private string frivillige;
+}
