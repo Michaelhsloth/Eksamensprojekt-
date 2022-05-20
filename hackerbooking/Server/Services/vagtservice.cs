@@ -48,10 +48,31 @@ namespace hackerbooking.Server.Services
             }
         }
 
+        public async Task DeleteOpgave(int id)
+        {
+            var parameters = new { ID = id };
+            var sql = "DELETE FROM opgaver WHERE opgid = @ID";
+            using (var connection = connector.Connect())
+            {
+                await connection.ExecuteAsync(sql, parameters);
+                //Console.WriteLine("service nået");   
+
+            }
+        }
         public async Task postVagt(TestDTO vagt)
         {
             var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, SLUT = vagt.slut };
             var sql = "INSERT INTO vagter (opgave, start, slut) VALUES (@OPGAVE, @START, @SLUT)";
+            using (var connection = connector.Connect())
+            {
+                await connection.ExecuteAsync(sql, parameters);
+            }
+        }
+
+        public async Task NyOpgave(OpgaverDTO opgave)
+        {
+            var parameters = new { OPGAVE = opgave.opgnavn };
+            var sql = "INSERT INTO opgaver (opgnavn) VALUES (@OPGAVE)";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);

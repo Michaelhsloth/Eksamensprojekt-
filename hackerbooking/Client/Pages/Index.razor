@@ -1,129 +1,17 @@
 ﻿@page "/"
-@using hackerbooking.Shared;
-@inject HttpClient Http
 
-@if (opgaver == null)
-{
-    <p><em>Loading...</em></p>
-}
+<PageTitle>Counter</PageTitle>
 
+<h1>Login</h1>
 
-else
-{
-    <span>
-        Opgave:
-        @foreach (var item in opgaver)
-        {
-            <br>
-            <input type="radio" id="@item.opgnavn" name="opgaver" value=@item.opgnavn @onchange="@(() => UpdateOpgave(@item.opgnavn))">
-            <label for="html">@item.opgnavn</label>
-        }
-
-    </span>
-    <br />
-    <span>Start Tidspunkt: </span>
-    <input type="datetime-local" @bind-value="vagt.start" placeholder="DateTime" />
-    <br />
-    <span>Slut Tidspunkt: </span>
-    <input type="datetime-local" @bind-value="vagt.slut" placeholder="DateTime" />
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">POST</button>
-    <p>Liste over entries</p>
-    <table class="table table-responsive">
-        <thead>
-            <tr>
-                <th>Opgave</th>
-                <th>Start</th>
-                <th>Slut</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in vagter)
-            {
-                <tr>
-                    <td>@item.opgave</td>
-                    <td>@item.start</td>
-                    <td>@item.slut</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.id))">Show/Hide</button>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.id))">DELETE</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div hidden="@HideLabel">
-        <span>
-            Opgave:
-            @foreach (var item in opgaver)
-            {
-                <br>
-                <input type="radio" id="@item.opgnavn" name="editOpgaver" value=@item.opgnavn @onchange="@(() => UpdateEditOpgave(@item.opgnavn))">
-                <label for="html">@item.opgnavn</label>
-            }
-
-        </span>
-        <span>Start Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.start" placeholder="DateTime" />
-        <br />
-        <span>Slut Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.slut" placeholder="DateTime" />
-        <button class="btn btn-sm btn-primary" @onclick="@(()=>putVagt())">EDIT</button>
-    </div>
-}
+<label>Email: </label>
+<input type="email" />
+<br />
+<label>Password: </label>
+<input type="password" />
+<br />
+<button class="btn btn-sm btn-primary">Login</button>
 
 @code {
-    private TestDTO[] vagter;
-    private OpgaverDTO[] opgaver;
 
-    private TestDTO vagt = new();
-    private OpgaverDTO opgave = new();
-
-    private string tempOpgave;
-    private string tempEditOpgave;
-    private int tempId;
-
-    protected override async Task OnInitializedAsync()
-    {
-        vagter = await Http.GetFromJsonAsync<TestDTO[]>("api/Vagt");
-        opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
-    }
-    private async Task DeleteVagt(int id)
-    {
-        await Http.DeleteAsync($"api/Vagt/{id}");
-        await OnInitializedAsync();
-    }
-
-    private async Task postVagt(TestDTO vagt)
-    {
-        var nyVagt = vagt;
-        nyVagt.opgave = tempOpgave;
-        await Http.PostAsJsonAsync<TestDTO>("api/Vagt", nyVagt);
-        await OnInitializedAsync();
-    }
-    private async Task putVagt()
-    {
-        var nyEditVagt = vagt;
-        nyEditVagt.opgave = tempEditOpgave;
-        nyEditVagt.id = tempId;
-        await Http.PutAsJsonAsync<TestDTO>($"api/Vagt/{nyEditVagt.id}", nyEditVagt);
-        await OnInitializedAsync();
-    }
-
-    private void UpdateOpgave(string input)
-    {
-        tempOpgave = input;
-    }
-
-    private void UpdateEditOpgave(string input)
-    {
-        tempEditOpgave = input;
-    }
-
-    private bool HideLabel { get; set; } = true;
-
-    private void Toggle(int id)
-    {
-        tempId = id;
-        HideLabel = !HideLabel;
-    }
 }

@@ -38,12 +38,27 @@ namespace hackerbooking.Server.Controllers
             await _service.DeleteVagt(id);
             return NoContent();
         }
+
+        [HttpDelete("api/Opgave/{id}")]
+        public async Task<IActionResult> DeleteOpgave(int id)
+        {
+            Console.WriteLine("api nået" + id);
+            await _service.DeleteOpgave(id);
+            return NoContent();
+        }
         [HttpPost("api/Vagt")]
         public async Task<IActionResult> postVagt(TestDTO vagt)
         {
             await _service.postVagt(vagt);
             return NoContent();
         }
+        [HttpPost("api/nyOpgave")]
+        public async Task<IActionResult> NyOpgave(OpgaverDTO opgave)
+        {
+            await _service.NyOpgave(opgave);
+            return NoContent();
+        }
+
         [HttpPut("api/Vagt/{id}")]
         public async Task<IActionResult> putVagt(TestDTO vagt)
         {
