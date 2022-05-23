@@ -15,21 +15,21 @@ else
         @foreach (var item in opgaver)
         {
             <br>
-            <input type="radio" id="@item.opgnavn" name="opgaver" value=@item.opgnavn @onchange="@(() => UpdateOpgave(@item.opgnavn))">
-            <label for="html">@item.opgnavn</label>
-            <button @onclick="@(() => DeleteOpgave(@item.opgid))">Slet</button>
+            <input type="radio" id="@item.opgave_navn" name="opgaver" value=@item.opgave_navn @onchange="@(() => UpdateOpgave(@item.opgave_navn))">
+            <label for="html">@item.opgave_navn</label>
+            <button @onclick="@(() => DeleteOpgave(@item.opgave_id))">Slet</button>
         }
         <br>
         <label>Opret Ny Opgave</label>
-        <input @bind-value="opgave.opgnavn" placeholder="string" />
+        <input @bind-value="opgave.opgave_navn" placeholder="string" />
         <button class="btn btn-sm btn-primary" @onclick="@(()=>NyOpgave())">Opret Opgave</button>
     </span>
     <br />
     <span>Start Tidspunkt: </span>
-    <input type="datetime-local" @bind-value="vagt.start" placeholder="DateTime" />
+    <input type="datetime-local" @bind-value="vagt.dato_tid_start" placeholder="DateTime" />
     <br />
     <span>Slut Tidspunkt: </span>
-    <input type="datetime-local" @bind-value="vagt.slut" placeholder="DateTime" />
+    <input type="datetime-local" @bind-value="vagt.dato_tid_slut" placeholder="DateTime" />
     <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">POST</button>
     <p>Liste over entries</p>
     <table class="table table-responsive">
@@ -44,12 +44,12 @@ else
             @foreach (var item in vagter)
             {
                 <tr>
-                    <td>@item.opgave</td>
-                    <td>@item.start</td>
-                    <td>@item.slut</td>
+                    <td>@item.opgave_navn</td>
+                    <td>@item.dato_tid_start</td>
+                    <td>@item.dato_tid_slut</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.id))">Show/Hide</button>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.id))">DELETE</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.vagt_id))">Show/Hide</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.vagt_id))">DELETE</button>
                     </td>
                 </tr>
             }
@@ -61,25 +61,25 @@ else
             @foreach (var item in opgaver)
             {
                 <br>
-                <input type="radio" id="@item.opgnavn" name="editOpgaver" value=@item.opgnavn @onchange="@(() => UpdateEditOpgave(@item.opgnavn))">
-                <label for="html">@item.opgnavn</label>
+                <input type="radio" id="@item.opgave_navn" name="editOpgaver" value=@item.opgave_navn @onchange="@(() => UpdateEditOpgave(@item.opgave_navn))">
+                <label for="html">@item.opgave_navn</label>
             }
 
         </span>
         <span>Start Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.start" placeholder="DateTime" />
+        <input type="datetime-local" @bind-value="@vagt.dato_tid_start" placeholder="DateTime" />
         <br />
         <span>Slut Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.slut" placeholder="DateTime" />
+        <input type="datetime-local" @bind-value="@vagt.dato_tid_slut" placeholder="DateTime" />
         <button class="btn btn-sm btn-primary" @onclick="@(()=>putVagt())">EDIT</button>
     </div>
 }
 
 @code {
-    private TestDTO[] vagter;
+    private VagterDTO[] vagter;
     private OpgaverDTO[] opgaver;
 
-    private TestDTO vagt = new();
+    private VagterDTO vagt = new();
     private OpgaverDTO opgave = new();
 
     private string tempOpgave;
@@ -88,7 +88,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        vagter = await Http.GetFromJsonAsync<TestDTO[]>("api/Vagt");
+        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
         opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
     }
     private async Task DeleteVagt(int id)
@@ -97,19 +97,19 @@ else
         await OnInitializedAsync();
     }
 
-    private async Task postVagt(TestDTO vagt)
+    private async Task postVagt(VagterDTO vagt)
     {
         var nyVagt = vagt;
-        nyVagt.opgave = tempOpgave;
-        await Http.PostAsJsonAsync<TestDTO>("api/Vagt", nyVagt);
+        nyVagt.opgave_navn = tempOpgave;
+        await Http.PostAsJsonAsync<VagterDTO>("api/Vagt", nyVagt);
         await OnInitializedAsync();
     }
     private async Task putVagt()
     {
         var nyEditVagt = vagt;
-        nyEditVagt.opgave = tempEditOpgave;
-        nyEditVagt.id = tempId;
-        await Http.PutAsJsonAsync<TestDTO>($"api/Vagt/{nyEditVagt.id}", nyEditVagt);
+        nyEditVagt.opgave_navn = tempEditOpgave;
+        nyEditVagt.vagt_id = tempId;
+        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagt/{nyEditVagt.vagt_id}", nyEditVagt);
         await OnInitializedAsync();
     }
 

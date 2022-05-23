@@ -26,9 +26,9 @@ else
             @foreach (var item in vagter)
             {
                 <tr>
-                    <td>@item.opgave</td>
-                    <td>@item.start</td>
-                    <td>@item.slut</td>
+                    <td>@item.opgave_navn</td>
+                    <td>@item.dato_tid_start</td>
+                    <td>@item.dato_tid_slut</td>
                     <td>
                         <button class="btn btn-sm btn-primary">Tag Vagt</button>
                     </td>
@@ -39,12 +39,12 @@ else
 }
 
 @code {
-    private TestDTO[] vagter;
+    private VagterDTO[] vagter;
 
-    private TestDTO vagt = new();
+    private VagterDTO vagt = new();
 
     protected override async Task OnInitializedAsync()
     {
-        vagter = await Http.GetFromJsonAsync<TestDTO[]>("api/Vagt");
+        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
     }
 }

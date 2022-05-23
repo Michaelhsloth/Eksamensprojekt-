@@ -3,7 +3,7 @@
     public class OpgaverDTO
     {
 
-        public string opgnavn { get; set; }
-        public int opgid { get; set; }
+        public string? opgave_navn { get; set; }
+        public int opgave_id { get; set; }
     }
 }

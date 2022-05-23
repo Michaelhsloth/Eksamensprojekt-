@@ -15,14 +15,14 @@ namespace hackerbooking.Server.Services
             connector = _connector;
 
         }
-        public List<TestDTO> getVagter()
+        public List<VagterDTO> getVagter()
         {
             var sql = "SELECT * FROM vagter";
             using (var connection = connector.Connect())
             {
-                var vagtList = connection.Query<TestDTO>(sql);
+                var vagtList = connection.Query<VagterDTO>(sql);
                 //Console.WriteLine("service nået");
-                return vagtList.ToList<TestDTO>();
+                return vagtList.ToList<VagterDTO>();
             }
         }
         public List<OpgaverDTO> GetOpgaver()
@@ -39,7 +39,7 @@ namespace hackerbooking.Server.Services
         public async Task DeleteVagt(int id)
         {
             var parameters = new { ID = id };
-            var sql = "DELETE FROM vagter WHERE id = @ID";
+            var sql = "DELETE FROM vagter WHERE vagt_id = @ID";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
@@ -51,7 +51,7 @@ namespace hackerbooking.Server.Services
         public async Task DeleteOpgave(int id)
         {
             var parameters = new { ID = id };
-            var sql = "DELETE FROM opgaver WHERE opgid = @ID";
+            var sql = "DELETE FROM opgaver WHERE opgave_id = @ID";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
@@ -59,10 +59,10 @@ namespace hackerbooking.Server.Services
 
             }
         }
-        public async Task postVagt(TestDTO vagt)
+        public async Task postVagt(VagterDTO vagt)
         {
-            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, SLUT = vagt.slut };
-            var sql = "INSERT INTO vagter (opgave, start, slut) VALUES (@OPGAVE, @START, @SLUT)";
+            var parameters = new { OPGAVE = vagt.opgave_navn, START = vagt.dato_tid_start, SLUT = vagt.dato_tid_slut };
+            var sql = "INSERT INTO vagter (opgave_navn, dato_tid_start, dato_tid_slut) VALUES (@OPGAVE, @START, @SLUT)";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
@@ -71,19 +71,19 @@ namespace hackerbooking.Server.Services
 
         public async Task NyOpgave(OpgaverDTO opgave)
         {
-            var parameters = new { OPGAVE = opgave.opgnavn };
-            var sql = "INSERT INTO opgaver (opgnavn) VALUES (@OPGAVE)";
+            var parameters = new { OPGAVE = opgave.opgave_navn };
+            var sql = "INSERT INTO opgaver (opgave_navn) VALUES (@OPGAVE)";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
             }
         }
 
-        public async Task putVagt(TestDTO vagt)
+        public async Task putVagt(VagterDTO vagt)
         {
-            var parameters = new { OPGAVE = vagt.opgave, START = vagt.start, SLUT = vagt.slut, ID = vagt.id };
+            var parameters = new { OPGAVE = vagt.opgave_navn, START = vagt.dato_tid_start, SLUT = vagt.dato_tid_slut, ID = vagt.vagt_id };
             //Console.WriteLine($"{vagt.navn},{vagt.id},{vagt.tal}");
-            var sql = "UPDATE vagter SET opgave = @OPGAVE, start = @START, slut = @SLUT WHERE id = @ID";
+            var sql = "UPDATE vagter SET opgave_navn = @OPGAVE, dato_tid_start = @START, dato_tid_slut = @SLUT WHERE vagt_id = @ID";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
