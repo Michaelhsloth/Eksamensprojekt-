@@ -35,7 +35,17 @@ namespace hackerbooking.Server.Services
                 return OpgaveList.ToList<OpgaverDTO>();
             }
         }
-
+        public List<FrivilligeDTO> Login(string Email, string Password)
+        {
+            var parameters = new { EMAIL = Email, PASSWORD = Password };
+            var sql = "SELECT * FROM frivillig WHERE email = @EMAIL AND password = crypt(@PASSWORD, password)";
+            using (var connection = connector.Connect())
+            {
+                var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
+                Console.WriteLine("service nået" + parameters);
+                return FrivilligeList.ToList<FrivilligeDTO>();
+            }
+        }
         public async Task DeleteVagt(int id)
         {
             var parameters = new { ID = id };
@@ -73,6 +83,15 @@ namespace hackerbooking.Server.Services
         {
             var parameters = new { OPGAVE = opgave.opgave_navn };
             var sql = "INSERT INTO opgaver (opgave_navn) VALUES (@OPGAVE)";
+            using (var connection = connector.Connect())
+            {
+                await connection.ExecuteAsync(sql, parameters);
+            }
+        }
+        public async Task PostFrivillig(FrivilligeDTO frivillig)
+        {
+            var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password  };
+            var sql = "INSERT INTO frivillig (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')))";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);

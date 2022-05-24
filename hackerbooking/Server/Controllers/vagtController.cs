@@ -31,6 +31,14 @@ namespace hackerbooking.Server.Controllers
 
         }
 
+        [HttpGet("Login/Email{Email}Password{Password}")]
+        public List<FrivilligeDTO> FrivilligLogin(string Email, string Password)
+        {
+            Console.WriteLine("api nået" + Email + Password);
+            return _service.Login(Email, Password);
+
+        }
+
         [HttpDelete("api/Vagt/{id}")]
         public async Task<IActionResult> DeleteVagt(int id)
         {
@@ -58,7 +66,12 @@ namespace hackerbooking.Server.Controllers
             await _service.NyOpgave(opgave);
             return NoContent();
         }
-
+        [HttpPost("api/Frivillig")]
+        public async Task<IActionResult> PostFrivillige(FrivilligeDTO frivillig)
+        {
+            await _service.PostFrivillig(frivillig);
+            return NoContent();
+        }
         [HttpPut("api/Vagt/{id}")]
         public async Task<IActionResult> putVagt(VagterDTO vagt)
         {

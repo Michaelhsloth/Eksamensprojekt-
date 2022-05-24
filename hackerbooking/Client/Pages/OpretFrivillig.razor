@@ -1,4 +1,5 @@
 ﻿@page "/OpretFrivillig"
+@using hackerbooking.Shared;
 @inject HttpClient Http
 
 <PageTitle>Opret Frivillig</PageTitle>
@@ -7,43 +8,63 @@
 
 <label for="fname">Navn:</label>
 <br />
-<input id="fname" name="fname">
+<input id="fname" name="fname" @bind-value="frivillig.navn">
 <br />
 <br />
 <label for="lname">Efternavn:</label>
 <br />
-<input id="lname" name="lname">
+<input id="lname" name="lname" @bind-value="frivillig.efternavn">
 <br />
 <br />
 <label for="fdag">Fødselsdag:</label>
 <br />
-<input type="date" id="fdag" name="fdag">
+<input type="date" id="fdag" name="fdag" @bind-value="frivillig.fødselsdag">
 <br />
 <br />
 <label for="Email">Email:</label>
 <br />
-<input id="Email" name="Email">
+<input id="Email" name="Email" @bind-value="frivillig.email">
 <br />
 <br />
 <label for="telefon">Telefon Nummer:</label>
 <br />
-<input id="telefon" name="telefon">
+<input id="telefon" name="telefon" @bind-value="frivillig.telefon_nummer">
 <br />
 <br />
 <label for="kompetencer">Kompetencer:</label>
 <br />
-<input id="kompetencer" name="kompetencer">
+<input id="kompetencer" name="kompetencer" @bind-value="frivillig.kompetence">
 <br />
 <br />
 <label>Password:</label>
 <br />
-<input type="password" id="pword" />
+<input type="password" id="pword0" @bind-value="password0"/>
 <br />
 <br />
 <label>Bekræft Password:</label>
 <br />
-<input type="password" id="pword" />
+<input type="password" id="pword1" @bind-value="password1"/>
+
+<button class="btn btn-sm btn-primary" @onclick="@(()=>PostFrivillig(@frivillig))">Opret Frivillig</button>
 
 @code {
+    private string? password0;
+    private string? password1;
+
+    private FrivilligeDTO frivillig = new();
+
+    private async Task PostFrivillig(FrivilligeDTO frivillig)
+    {
+        if (password0 == password1)
+        {
+            frivillig.password = password0;
+            await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillig", frivillig);
+        }
+        else
+        {
+            // error
+        }
+
+    }
 
 }

@@ -2,7 +2,7 @@
 {
     public class VagterDTO
     {
-        private bool vagt_status { get; set; }
+        public bool vagt_status { get; set; }
         public DateTime dato_tid_start { get; set; }
         public DateTime dato_tid_slut { get; set; }
         public int vagt_id { get; set; }
