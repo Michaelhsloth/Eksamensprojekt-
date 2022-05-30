@@ -45,6 +45,17 @@ namespace hackerbooking.Server.Services
                 return FrivilligeList.ToList<FrivilligeDTO>();
             }
         }
+        public List<FrivilligeDTO> FindFrivillig(int id)
+        {
+            var parameters = new { ID = id };
+            var sql = "SELECT * FROM frivillig WHERE frivillig_id = @id";
+            using (var connection = connector.Connect())
+            {
+                var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
+                Console.WriteLine("service nået" + parameters);
+                return FrivilligeList.ToList<FrivilligeDTO>();
+            }
+        }
         public async Task DeleteVagt(int id)
         {
             var parameters = new { ID = id };

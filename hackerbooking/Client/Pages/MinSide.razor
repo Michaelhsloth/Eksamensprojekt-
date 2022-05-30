@@ -7,13 +7,30 @@
 
 <h1>Min Side</h1>
 
-<p>@id</p>
+@if (frivillig == null)
+{
+    <p><em>Loading...</em></p>
+}
+
+else
+{
+    <p>Navn: @frivillig[0].navn</p>
+    <p>Efternavn: @frivillig[0].efternavn</p>
+    <p>Fødselsdag: @frivillig[0].fødselsdag</p>
+    <p>Email: @frivillig[0].email</p>
+    <p>Telefon Nummer: @frivillig[0].telefon_nummer</p>
+    <p>Kompetencer: @frivillig[0].kompetence</p>
+    <br />
+    <button class="btn btn-sm btn-primary">Ændre Email</button>
+    <button class="btn btn-sm btn-primary">Ændre Password</button>
+}
 
 @code {
-    private int id;
+    private FrivilligeDTO[] frivillig;
 
     protected override async Task OnInitializedAsync()
     {
-        id = await localStorage.GetItemAsync<int>("id");
+        var id = await localStorage.GetItemAsync<int>("id");
+        frivillig = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"FindFrivillig{id}");
     }
 }

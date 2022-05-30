@@ -23,6 +23,13 @@ namespace hackerbooking.Server.Controllers
 
         }
 
+        [HttpGet("FindFrivillig{id}")]
+        public List<FrivilligeDTO> FindFrivillig(int id)
+        {
+            //Console.WriteLine("api nået");
+            return _service.FindFrivillig(id);
+
+        }
         [HttpGet("api/Opgaver")]
         public List<OpgaverDTO> GetAllOpgaver()
         {

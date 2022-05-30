@@ -5,7 +5,7 @@
 
 <PageTitle>Vagter</PageTitle>
 
-<h1>Liste Over Vagter, Du er </h1>
+<h1>Tilgængelige Vagter</h1>
 
 @if (vagter == null)
 {
@@ -15,6 +15,7 @@
 
 else
 {
+    <h3>Du har Id: @frivillig.frivillig_id</h3>
     <table class="table table-responsive">
         <thead>
             <tr>
@@ -26,6 +27,9 @@ else
         <tbody>
             @foreach (var item in vagter)
             {
+                // kun vis de vagter der ikke har nogen frivillige på
+                if (item.frivillig_id == 0)
+                {
                 <tr>
                     <td>@item.opgave_navn</td>
                     <td>@item.dato_tid_start</td>
@@ -33,7 +37,33 @@ else
                     <td>
                         <button class="btn btn-sm btn-primary" @onclick="@(()=>TagVagt(@item.vagt_id))">Tag Vagt</button>
                     </td>
+                </tr>    
+                }
+            }
+        </tbody>
+    </table>
+<h1>Dine Vagter</h1>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Opgave</th>
+                <th>Start</th>
+                <th>Slut</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in vagter)
+            {
+                // kun vis de vagter der matcher dit id (Dem du har taget)
+                if (item.frivillig_id == frivillig.frivillig_id)
+                {
+                <tr>
+                    <td>@item.opgave_navn</td>
+                    <td>@item.dato_tid_start</td>
+                    <td>@item.dato_tid_slut</td>
                 </tr>
+                    
+                }
             }
         </tbody>
     </table>
@@ -46,12 +76,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Få frivillig_id fra browseren og tildel værdi
         frivillig.frivillig_id = await localStorage.GetItemAsync<int>("id");
+        // Hent vagter
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
     }
 
     private async Task TagVagt(int id)
     {
+        // Tilføj frivillig_id til den valgte vagt
         await Http.PutAsJsonAsync<FrivilligeDTO>($"api/TagVagt/{id}", frivillig);
+        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
     }
 }
