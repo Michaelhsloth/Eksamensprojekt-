@@ -1,0 +1,19 @@
+﻿@page "/MinSide"
+@using hackerbooking.Shared;
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<PageTitle>Min Side</PageTitle>
+
+<h1>Min Side</h1>
+
+<p>@id</p>
+
+@code {
+    private int id;
+
+    protected override async Task OnInitializedAsync()
+    {
+        id = await localStorage.GetItemAsync<int>("id");
+    }
+}

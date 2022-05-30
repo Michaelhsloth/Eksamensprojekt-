@@ -1,8 +1,7 @@
 ﻿using Dapper;
 using hackerbooking.Server.Connector;
 using hackerbooking.Shared;
-//data acess service til vagter -- til implementation i controlleren 
-//det her er man skriver sql queries til databasen 
+
 namespace hackerbooking.Server.Services
 {
     public class vagtService
@@ -90,7 +89,7 @@ namespace hackerbooking.Server.Services
         }
         public async Task PostFrivillig(FrivilligeDTO frivillig)
         {
-            var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password  };
+            var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password };
             var sql = "INSERT INTO frivillig (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')))";
             using (var connection = connector.Connect())
             {
@@ -106,6 +105,18 @@ namespace hackerbooking.Server.Services
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
+            }
+        }
+
+        public async Task TagVagt(int id, FrivilligeDTO frivillig)
+        {
+            var parameters = new { ID = id, FRIVILLIG = frivillig.frivillig_id };
+            var sql = "UPDATE vagter set frivillig_id = @FRIVILLIG WHERE vagt_id = @id";
+            using (var connection = connector.Connect())
+            {
+                await connection.ExecuteAsync(sql, parameters);
+                //Console.WriteLine("service nået");   
+
             }
         }
     }

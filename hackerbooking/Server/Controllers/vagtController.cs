@@ -78,5 +78,12 @@ namespace hackerbooking.Server.Controllers
             await _service.putVagt(vagt);
             return NoContent();
         }
+        [HttpPut("api/TagVagt/{id}")]
+        public async Task<IActionResult> TagVagt(int id, FrivilligeDTO frivillig)
+        {
+            Console.WriteLine("api nået" + id + " " + +frivillig.frivillig_id);
+            await _service.TagVagt(id, frivillig);
+            return NoContent();
+        }
     }
 }

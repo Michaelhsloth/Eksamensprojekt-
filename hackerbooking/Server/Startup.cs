@@ -1,4 +1,5 @@
-﻿using hackerbooking.Server.Connector;
+﻿
+using hackerbooking.Server.Connector;
 using hackerbooking.Server.Services;
 
 namespace hackerbooking.Server
@@ -16,10 +17,12 @@ namespace hackerbooking.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<vagtService>();
+            services.AddTransient<vagtService>();
+            services.AddSingleton<DapperConnector>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddSingleton<DapperConnector>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,56 @@
+﻿@page "/"
+@using hackerbooking.Shared;
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<label>Email: </label>
+<br />
+<input type="email" @bind-value="Email" />
+<br />
+<br />
+<label>Password: </label>
+<br />
+<input type="password" @bind-value="Password" />
+<br />
+<br />
+<button class="btn btn-sm btn-primary" @onclick="@(()=>FrivilligLogin())">Login</button>
+
+@if (id != 0)
+{
+    <p>Du er logget ind med id: @id</p>
+
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>FrivilligLogout())">Logout</button>
+
+}
+
+@code {
+    private FrivilligeDTO[] frivillige;
+
+    private string Email;
+    private string Password;
+
+    private int id;
+
+    protected override async Task OnInitializedAsync()
+    {
+        id = await localStorage.GetItemAsync<int>("id");
+    }
+
+    private async Task FrivilligLogin()
+    {
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"Login/Email{Email}Password{Password}");
+
+        id = frivillige[0].frivillig_id;
+        await localStorage.SetItemAsync("id", frivillige[0].frivillig_id);
+    }
+
+    private async Task FrivilligLogout()
+    {
+        await localStorage.RemoveItemAsync("id");
+        id = 0;
+    }
+}

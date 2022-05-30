@@ -1,10 +1,11 @@
 ﻿@page "/Vagter"
 @using hackerbooking.Shared;
 @inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Vagter</PageTitle>
 
-<h1>Liste Over Vagter</h1>
+<h1>Liste Over Vagter, Du er </h1>
 
 @if (vagter == null)
 {
@@ -30,7 +31,7 @@ else
                     <td>@item.dato_tid_start</td>
                     <td>@item.dato_tid_slut</td>
                     <td>
-                        <button class="btn btn-sm btn-primary">Tag Vagt</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>TagVagt(@item.vagt_id))">Tag Vagt</button>
                     </td>
                 </tr>
             }
@@ -41,10 +42,16 @@ else
 @code {
     private VagterDTO[] vagter;
 
-    private VagterDTO vagt = new();
+    private FrivilligeDTO frivillig = new();
 
     protected override async Task OnInitializedAsync()
     {
+        frivillig.frivillig_id = await localStorage.GetItemAsync<int>("id");
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
+    }
+
+    private async Task TagVagt(int id)
+    {
+        await Http.PutAsJsonAsync<FrivilligeDTO>($"api/TagVagt/{id}", frivillig);
     }
 }
