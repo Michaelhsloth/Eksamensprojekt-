@@ -42,7 +42,7 @@
 
     private async Task FrivilligLogin()
     {
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"Login/Email{Email}Password{Password}");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/Login/Email{Email}Password{Password}");
 
         id = frivillige[0].frivillig_id;
         await localStorage.SetItemAsync("id", frivillige[0].frivillig_id);

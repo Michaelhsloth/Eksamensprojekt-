@@ -12,8 +12,8 @@ namespace hackerbooking.Server.Services
         {
 
             connector = _connector;
-
         }
+
         public List<VagterDTO> getVagter()
         {
             var sql = "SELECT * FROM vagter";
@@ -21,7 +21,17 @@ namespace hackerbooking.Server.Services
             {
                 var vagtList = connection.Query<VagterDTO>(sql);
                 //Console.WriteLine("service nået");
-                return vagtList.ToList<VagterDTO>();
+                return vagtList.ToList();
+            }
+        }
+        public List<FrivilligeDTO> HentFrivillige()
+        {
+            var sql = "SELECT * FROM frivillig";
+            using (var connection = connector.Connect())
+            {
+                var frivilligList = connection.Query<FrivilligeDTO>(sql);
+                //Console.WriteLine("service nået");
+                return frivilligList.ToList();
             }
         }
         public List<OpgaverDTO> GetOpgaver()
@@ -31,7 +41,7 @@ namespace hackerbooking.Server.Services
             {
                 var OpgaveList = connection.Query<OpgaverDTO>(sql);
                 //Console.WriteLine("service nået");
-                return OpgaveList.ToList<OpgaverDTO>();
+                return OpgaveList.ToList();
             }
         }
         public List<FrivilligeDTO> Login(string Email, string Password)
@@ -42,7 +52,7 @@ namespace hackerbooking.Server.Services
             {
                 var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
                 Console.WriteLine("service nået" + parameters);
-                return FrivilligeList.ToList<FrivilligeDTO>();
+                return FrivilligeList.ToList();
             }
         }
         public List<FrivilligeDTO> FindFrivillig(int id)
@@ -53,7 +63,7 @@ namespace hackerbooking.Server.Services
             {
                 var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
                 Console.WriteLine("service nået" + parameters);
-                return FrivilligeList.ToList<FrivilligeDTO>();
+                return FrivilligeList.ToList();
             }
         }
         public async Task DeleteVagt(int id)
@@ -128,6 +138,17 @@ namespace hackerbooking.Server.Services
                 await connection.ExecuteAsync(sql, parameters);
                 //Console.WriteLine("service nået");   
 
+            }
+        }
+
+        public async Task UpdateFrivillig(int id, FrivilligeDTO frivillig)
+        {
+            var parameters = new { ID = id, EMAIL = frivillig.email, PASSWORD = frivillig.password };
+            var sql = "UPDATE frivillig set email = @EMAIL, password = crypt(@PASSWORD, gen_salt('bf')) WHERE frivillig_id = @ID";
+            using (var connection = connector.Connect())
+            {
+                await connection.ExecuteAsync(sql, parameters);
+                Console.WriteLine(parameters);
             }
         }
     }

@@ -8,16 +8,42 @@
 
 @if (frivillige == null)
 {
-    <p><em>Der er ingen frivillige</em></p>
-    <p><a href="OpretFrivillig">Opret Frivillig</a></p>
+    <p>Loading...</p>
 }
 
 
 else
 {
-
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Efternavn</th>
+                <th>Email</th>
+                <th>Kompetence</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in frivillige)
+            {
+                // kun vis de vagter der ikke har nogen frivillige på
+                <tr>
+                    <td>@item.navn</td>
+                    <td>@item.efternavn</td>
+                    <td>@item.email</td>
+                    <td>@item.kompetence</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
-    private string frivillige;
+    FrivilligeDTO[] frivillige;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Hent Frivillige
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>("api/Frivillige");
+    }
 }

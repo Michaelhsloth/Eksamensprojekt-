@@ -23,7 +23,15 @@ namespace hackerbooking.Server.Controllers
 
         }
 
-        [HttpGet("FindFrivillig{id}")]
+        [HttpGet("api/Frivillige")]
+        public List<FrivilligeDTO> HentFrivillige()
+        {
+            //Console.WriteLine("api nået");
+            return _service.HentFrivillige();
+
+        }
+
+        [HttpGet("api/FindFrivillig{id}")]
         public List<FrivilligeDTO> FindFrivillig(int id)
         {
             //Console.WriteLine("api nået");
@@ -38,7 +46,7 @@ namespace hackerbooking.Server.Controllers
 
         }
 
-        [HttpGet("Login/Email{Email}Password{Password}")]
+        [HttpGet("api/Login/Email{Email}Password{Password}")]
         public List<FrivilligeDTO> FrivilligLogin(string Email, string Password)
         {
             Console.WriteLine("api nået" + Email + Password);
@@ -90,6 +98,13 @@ namespace hackerbooking.Server.Controllers
         {
             Console.WriteLine("api nået" + id + " " + +frivillig.frivillig_id);
             await _service.TagVagt(id, frivillig);
+            return NoContent();
+        }
+        [HttpPut("api/updateFrivillig/{id}")]
+        public async Task<IActionResult> UpdateFrivillig(int id, FrivilligeDTO frivillig)
+        {
+            Console.WriteLine("hello");
+            await _service.UpdateFrivillig(id, frivillig);
             return NoContent();
         }
     }

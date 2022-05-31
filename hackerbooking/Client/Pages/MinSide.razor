@@ -14,23 +14,48 @@
 
 else
 {
-    <p>Navn: @frivillig[0].navn</p>
-    <p>Efternavn: @frivillig[0].efternavn</p>
-    <p>Fødselsdag: @frivillig[0].fødselsdag</p>
-    <p>Email: @frivillig[0].email</p>
-    <p>Telefon Nummer: @frivillig[0].telefon_nummer</p>
-    <p>Kompetencer: @frivillig[0].kompetence</p>
+    <p>Navn: @frivillige[0].navn</p>
+    <p>Efternavn: @frivillige[0].efternavn</p>
+    <p>Fødselsdag: @frivillige[0].fødselsdag</p>
+    <p>Email: @frivillige[0].email</p>
+    <p>Telefon Nummer: @frivillige[0].telefon_nummer</p>
+    <p>Kompetencer: @frivillige[0].kompetence</p>
     <br />
-    <button class="btn btn-sm btn-primary">Ændre Email</button>
-    <button class="btn btn-sm btn-primary">Ændre Password</button>
+    <input @bind-value="nyEmail" />
+    <input @bind-value="nyPassword0" />
+    <input @bind-value="nyPassword1" />
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>UpdateFrivillig())">Ændre</button>
 }
 
 @code {
-    private FrivilligeDTO[] frivillig;
+    private string? nyEmail;
+    private string? nyPassword0;
+    private string? nyPassword1;
+
+    private FrivilligeDTO[] frivillige;
+
+    private FrivilligeDTO frivillig = new();
+
+    private async Task UpdateFrivillig()
+    {
+        if (nyPassword0 == nyPassword1)
+        {
+            frivillig.email = nyEmail;
+            frivillig.password = nyPassword0;
+            // Update frivillig
+            Console.WriteLine(frivillig.email);
+            Console.WriteLine(frivillig.password);
+            await Http.PutAsJsonAsync($"api/updateFrivillig/{frivillige[0].frivillig_id}", frivillig);
+        }
+        else
+        {
+            // error
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         var id = await localStorage.GetItemAsync<int>("id");
-        frivillig = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"FindFrivillig{id}");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
 }
