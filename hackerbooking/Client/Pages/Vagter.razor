@@ -30,19 +30,19 @@ else
                 // kun vis de vagter der ikke har nogen frivillige på
                 if (item.frivillig_id == 0)
                 {
-                <tr>
-                    <td>@item.opgave_navn</td>
-                    <td>@item.dato_tid_start</td>
-                    <td>@item.dato_tid_slut</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>TagVagt(@item.vagt_id))">Tag Vagt</button>
-                    </td>
-                </tr>    
+                    <tr>
+                        <td>@item.opgave_navn</td>
+                        <td>@item.dato_tid_start</td>
+                        <td>@item.dato_tid_slut</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @onclick="@(()=>TagVagt(@item.vagt_id))">Tag Vagt</button>
+                        </td>
+                    </tr>
                 }
             }
         </tbody>
     </table>
-<h1>Dine Vagter</h1>
+    <h1>Dine Vagter</h1>
     <table class="table table-responsive">
         <thead>
             <tr>
@@ -57,12 +57,12 @@ else
                 // kun vis de vagter der matcher dit id (Dem du har taget)
                 if (item.frivillig_id == frivillig.frivillig_id)
                 {
-                <tr>
-                    <td>@item.opgave_navn</td>
-                    <td>@item.dato_tid_start</td>
-                    <td>@item.dato_tid_slut</td>
-                </tr>
-                    
+                    <tr>
+                        <td>@item.opgave_navn</td>
+                        <td>@item.dato_tid_start</td>
+                        <td>@item.dato_tid_slut</td>
+                    </tr>
+
                 }
             }
         </tbody>
@@ -79,13 +79,13 @@ else
         // Få frivillig_id fra browseren og tildel værdi
         frivillig.frivillig_id = await localStorage.GetItemAsync<int>("id");
         // Hent vagter
-        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
+        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagter");
     }
 
     private async Task TagVagt(int id)
     {
         // Tilføj frivillig_id til den valgte vagt
         await Http.PutAsJsonAsync<FrivilligeDTO>($"api/TagVagt/{id}", frivillig);
-        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
+        vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagter");
     }
 }

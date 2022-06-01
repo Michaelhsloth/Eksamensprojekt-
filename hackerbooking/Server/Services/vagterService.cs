@@ -4,11 +4,11 @@ using hackerbooking.Shared;
 
 namespace hackerbooking.Server.Services
 {
-    public class vagtService
+    public class vagterService
     {
         private readonly DapperConnector connector;
 
-        public vagtService(DapperConnector _connector)
+        public vagterService(DapperConnector _connector)
         {
 
             connector = _connector;
@@ -26,7 +26,7 @@ namespace hackerbooking.Server.Services
         }
         public List<FrivilligeDTO> HentFrivillige()
         {
-            var sql = "SELECT * FROM frivillig";
+            var sql = "SELECT * FROM brugere";
             using (var connection = connector.Connect())
             {
                 var frivilligList = connection.Query<FrivilligeDTO>(sql);
@@ -47,7 +47,7 @@ namespace hackerbooking.Server.Services
         public List<FrivilligeDTO> Login(string Email, string Password)
         {
             var parameters = new { EMAIL = Email, PASSWORD = Password };
-            var sql = "SELECT * FROM frivillig WHERE email = @EMAIL AND password = crypt(@PASSWORD, password)";
+            var sql = "SELECT * FROM brugere WHERE email = @EMAIL AND password = crypt(@PASSWORD, password)";
             using (var connection = connector.Connect())
             {
                 var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
@@ -58,7 +58,7 @@ namespace hackerbooking.Server.Services
         public List<FrivilligeDTO> FindFrivillig(int id)
         {
             var parameters = new { ID = id };
-            var sql = "SELECT * FROM frivillig WHERE frivillig_id = @id";
+            var sql = "SELECT * FROM brugere WHERE frivillig_id = @id";
             using (var connection = connector.Connect())
             {
                 var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
@@ -110,8 +110,8 @@ namespace hackerbooking.Server.Services
         }
         public async Task PostFrivillig(FrivilligeDTO frivillig)
         {
-            var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password };
-            var sql = "INSERT INTO frivillig (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')))";
+            var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password, KOORDINATOR = frivillig.koordinator };
+            var sql = "INSERT INTO brugere (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password, koordinator) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')), @KOORDINATOR)";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);
@@ -144,7 +144,7 @@ namespace hackerbooking.Server.Services
         public async Task UpdateFrivillig(int id, FrivilligeDTO frivillig)
         {
             var parameters = new { ID = id, EMAIL = frivillig.email, PASSWORD = frivillig.password };
-            var sql = "UPDATE frivillig set email = @EMAIL, password = crypt(@PASSWORD, gen_salt('bf')) WHERE frivillig_id = @ID";
+            var sql = "UPDATE brugere set email = @EMAIL, password = crypt(@PASSWORD, gen_salt('bf')) WHERE frivillig_id = @ID";
             using (var connection = connector.Connect())
             {
                 await connection.ExecuteAsync(sql, parameters);

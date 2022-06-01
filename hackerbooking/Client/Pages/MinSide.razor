@@ -7,7 +7,7 @@
 
 <h1>Min Side</h1>
 
-@if (frivillig == null)
+@if (frivillige == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -21,9 +21,18 @@ else
     <p>Telefon Nummer: @frivillige[0].telefon_nummer</p>
     <p>Kompetencer: @frivillige[0].kompetence</p>
     <br />
+
+    <h3>Ændre Email & Password</h3>
+    <p>Ny Email: </p>
     <input @bind-value="nyEmail" />
+    <br />
+    <p>Nyt Password: </p>
     <input @bind-value="nyPassword0" />
+    <br />
+    <p>Bekræft Nyt Password: </p>
     <input @bind-value="nyPassword1" />
+    <br />
+    <br />
     <button class="btn btn-sm btn-primary" @onclick="@(()=>UpdateFrivillig())">Ændre</button>
 }
 

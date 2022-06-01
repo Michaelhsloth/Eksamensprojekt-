@@ -1,13 +1,16 @@
 ﻿@page "/OpretVagt"
 @using hackerbooking.Shared;
 @inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-@if (opgaver == null)
+@if (frivillige == null)
 {
-    <p><em>Loading...</em></p>
+    <p>Loading...</p>
 }
-
-
+else if (frivillige[0].koordinator == false)
+{
+    <p>Du har ikke adgang til denne side</p>
+}
 else
 {
     <span>
@@ -30,7 +33,7 @@ else
     <br />
     <span>Slut Tidspunkt: </span>
     <input type="datetime-local" @bind-value="vagt.dato_tid_slut" placeholder="DateTime" />
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">POST</button>
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">Opret Vagt</button>
     <p>Liste over entries</p>
     <table class="table table-responsive">
         <thead>
@@ -48,8 +51,8 @@ else
                     <td>@item.dato_tid_start</td>
                     <td>@item.dato_tid_slut</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.vagt_id))">Show/Hide</button>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.vagt_id))">DELETE</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.vagt_id))">Edit</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.vagt_id))">Delete</button>
                     </td>
                 </tr>
             }
@@ -78,18 +81,24 @@ else
 @code {
     private VagterDTO[] vagter;
     private OpgaverDTO[] opgaver;
+    private FrivilligeDTO[] frivillige;
 
     private VagterDTO vagt = new();
     private OpgaverDTO opgave = new();
 
     private string tempOpgave;
     private string tempEditOpgave;
+
     private int tempId;
+    private int id;
 
     protected override async Task OnInitializedAsync()
     {
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagt");
         opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
+
+        id = await localStorage.GetItemAsync<int>("id");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
     private async Task DeleteVagt(int id)
     {

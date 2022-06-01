@@ -1,55 +1,78 @@
 ﻿@page "/OpretFrivillig"
 @using hackerbooking.Shared;
 @inject HttpClient Http
+@inject NavigationManager NavManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Opret Frivillig</PageTitle>
+@if (frivillige == null)
+{
+    <p>Loading...</p>
+}
+else if (frivillige[0].koordinator == false)
+{
+    <p>Du har ikke adgang til denne side</p>
+}
+else
+{
+    <h1>Opret En Frivillig</h1>
 
-<h1>Opret En Frivillig</h1>
+    <label for="fname">Navn:</label>
+    <br />
+    <input id="fname" name="fname" @bind-value="frivillig.navn">
+    <br />
+    <br />
+    <label for="lname">Efternavn:</label>
+    <br />
+    <input id="lname" name="lname" @bind-value="frivillig.efternavn">
+    <br />
+    <br />
+    <label for="fdag">Fødselsdag:</label>
+    <br />
+    <input type="date" id="fdag" name="fdag" @bind-value="frivillig.fødselsdag">
+    <br />
+    <br />
+    <label for="Email">Email:</label>
+    <br />
+    <input id="Email" name="Email" @bind-value="frivillig.email">
+    <br />
+    <br />
+    <label for="telefon">Telefon Nummer:</label>
+    <br />
+    <input id="telefon" name="telefon" @bind-value="frivillig.telefon_nummer">
+    <br />
+    <br />
+    <label for="kompetencer">Kompetencer:</label>
+    <br />
+    <input id="kompetencer" name="kompetencer" @bind-value="frivillig.kompetence">
+    <br />
+    <label for="koordinator">Koordinator</label>
+    <input type="checkbox" name="koordinator" @bind-value="frivillig.koordinator">
+    <br>
+    <br />
+    <label>Password:</label>
+    <br />
+    <input type="password" id="pword0" @bind-value="password0" />
+    <br />
+    <br />
+    <label>Bekræft Password:</label>
+    <br />
+    <input type="password" id="pword1" @bind-value="password1" />
 
-<label for="fname">Navn:</label>
-<br />
-<input id="fname" name="fname" @bind-value="frivillig.navn">
-<br />
-<br />
-<label for="lname">Efternavn:</label>
-<br />
-<input id="lname" name="lname" @bind-value="frivillig.efternavn">
-<br />
-<br />
-<label for="fdag">Fødselsdag:</label>
-<br />
-<input type="date" id="fdag" name="fdag" @bind-value="frivillig.fødselsdag">
-<br />
-<br />
-<label for="Email">Email:</label>
-<br />
-<input id="Email" name="Email" @bind-value="frivillig.email">
-<br />
-<br />
-<label for="telefon">Telefon Nummer:</label>
-<br />
-<input id="telefon" name="telefon" @bind-value="frivillig.telefon_nummer">
-<br />
-<br />
-<label for="kompetencer">Kompetencer:</label>
-<br />
-<input id="kompetencer" name="kompetencer" @bind-value="frivillig.kompetence">
-<br />
-<br />
-<label>Password:</label>
-<br />
-<input type="password" id="pword0" @bind-value="password0"/>
-<br />
-<br />
-<label>Bekræft Password:</label>
-<br />
-<input type="password" id="pword1" @bind-value="password1"/>
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>PostFrivillig(@frivillig))">Opret Frivillig</button>
 
-<button class="btn btn-sm btn-primary" @onclick="@(()=>PostFrivillig(@frivillig))">Opret Frivillig</button>
+}
+
+
+
 
 @code {
     private string? password0;
     private string? password1;
+
+    private int id;
+
+    private FrivilligeDTO[] frivillige;
 
     private FrivilligeDTO frivillig = new();
 
@@ -59,12 +82,17 @@
         {
             frivillig.password = password0;
             await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillig", frivillig);
+            NavManager.NavigateTo("/Frivillige");
         }
         else
         {
-            // error
+            Console.WriteLine(frivillig.koordinator);
         }
-
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        id = await localStorage.GetItemAsync<int>("id");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+    }
 }

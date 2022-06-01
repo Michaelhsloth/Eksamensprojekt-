@@ -2,6 +2,7 @@
 @using hackerbooking.Shared;
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
 
 <PageTitle>Login</PageTitle>
 
@@ -21,9 +22,7 @@
 
 @if (id != 0)
 {
-    <p>Du er logget ind med id: @id</p>
-
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>FrivilligLogout())">Logout</button>
+    NavManager.NavigateTo("/Vagter");
 
 }
 
@@ -33,7 +32,7 @@
     private string Email;
     private string Password;
 
-    private int id;
+    private int id = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,6 +45,7 @@
 
         id = frivillige[0].frivillig_id;
         await localStorage.SetItemAsync("id", frivillige[0].frivillig_id);
+        NavManager.NavigateTo("/Vagter");
     }
 
     private async Task FrivilligLogout()

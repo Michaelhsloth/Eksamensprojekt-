@@ -10,5 +10,6 @@
         public int frivillig_id { get; set; }
         public DateTime fødselsdag { get; set; }
         public string? password { get; set; }
+        public bool koordinator { get; set; }
     }
 }
