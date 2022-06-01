@@ -6,11 +6,11 @@ namespace hackerbooking.Server.Controllers
 {
     [ApiController]
 
-    public class VagtController : ControllerBase
+    public class vagterController : ControllerBase
     {
         private vagterService _service;
 
-        public VagtController(vagterService service)
+        public vagterController(vagterService service)
         {
             _service = service;
         }
@@ -23,21 +23,6 @@ namespace hackerbooking.Server.Controllers
 
         }
 
-        [HttpGet("api/Frivillige")]
-        public List<FrivilligeDTO> HentFrivillige()
-        {
-            //Console.WriteLine("api nået");
-            return _service.HentFrivillige();
-
-        }
-
-        [HttpGet("api/FindFrivillig{id}")]
-        public List<FrivilligeDTO> FindFrivillig(int id)
-        {
-            //Console.WriteLine("api nået");
-            return _service.FindFrivillig(id);
-
-        }
         [HttpGet("api/Opgaver")]
         public List<OpgaverDTO> GetAllOpgaver()
         {
@@ -81,13 +66,7 @@ namespace hackerbooking.Server.Controllers
             await _service.NyOpgave(opgave);
             return NoContent();
         }
-        [HttpPost("api/Frivillig")]
-        public async Task<IActionResult> PostFrivillige(FrivilligeDTO frivillig)
-        {
-            Console.WriteLine("Controlleren");
-            await _service.PostFrivillig(frivillig);
-            return NoContent();
-        }
+
         [HttpPut("api/Vagt/{id}")]
         public async Task<IActionResult> putVagt(VagterDTO vagt)
         {
@@ -99,13 +78,6 @@ namespace hackerbooking.Server.Controllers
         {
             Console.WriteLine("api nået" + id + " " + +frivillig.frivillig_id);
             await _service.TagVagt(id, frivillig);
-            return NoContent();
-        }
-        [HttpPut("api/updateFrivillig/{id}")]
-        public async Task<IActionResult> UpdateFrivillig(int id, FrivilligeDTO frivillig)
-        {
-            Console.WriteLine("hello");
-            await _service.UpdateFrivillig(id, frivillig);
             return NoContent();
         }
     }
