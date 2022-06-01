@@ -8,9 +8,9 @@ namespace hackerbooking.Server.Controllers
 
     public class FrivilligeController : ControllerBase
     {
-        private vagterService _service;
+        private readonly FrivilligeService _service;
 
-        public FrivilligeController(vagterService service)
+        public FrivilligeController(FrivilligeService service)
         {
             _service = service;
         }

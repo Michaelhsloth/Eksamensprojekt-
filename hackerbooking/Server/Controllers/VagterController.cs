@@ -6,11 +6,11 @@ namespace hackerbooking.Server.Controllers
 {
     [ApiController]
 
-    public class vagterController : ControllerBase
+    public class VagterController : ControllerBase
     {
-        private vagterService _service;
+        private readonly VagterService _service;
 
-        public vagterController(vagterService service)
+        public VagterController(VagterService service)
         {
             _service = service;
         }
@@ -23,22 +23,6 @@ namespace hackerbooking.Server.Controllers
 
         }
 
-        [HttpGet("api/Opgaver")]
-        public List<OpgaverDTO> GetAllOpgaver()
-        {
-            //Console.WriteLine("api nået");
-            return _service.GetOpgaver();
-
-        }
-
-        [HttpGet("api/Login/Email{Email}Password{Password}")]
-        public List<FrivilligeDTO> FrivilligLogin(string Email, string Password)
-        {
-            Console.WriteLine("api nået" + Email + Password);
-            return _service.Login(Email, Password);
-
-        }
-
         [HttpDelete("api/Vagt/{id}")]
         public async Task<IActionResult> DeleteVagt(int id)
         {
@@ -47,23 +31,10 @@ namespace hackerbooking.Server.Controllers
             return NoContent();
         }
 
-        [HttpDelete("api/Opgave/{id}")]
-        public async Task<IActionResult> DeleteOpgave(int id)
-        {
-            Console.WriteLine("api nået" + id);
-            await _service.DeleteOpgave(id);
-            return NoContent();
-        }
         [HttpPost("api/Vagt")]
         public async Task<IActionResult> postVagt(VagterDTO vagt)
         {
             await _service.postVagt(vagt);
-            return NoContent();
-        }
-        [HttpPost("api/nyOpgave")]
-        public async Task<IActionResult> NyOpgave(OpgaverDTO opgave)
-        {
-            await _service.NyOpgave(opgave);
             return NoContent();
         }
 

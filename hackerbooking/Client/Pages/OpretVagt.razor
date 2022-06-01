@@ -110,7 +110,7 @@ else
     {
         var nyVagt = vagt;
         nyVagt.opgave_navn = tempOpgave;
-        await Http.PostAsJsonAsync<VagterDTO>("api/Vagter", nyVagt);
+        await Http.PostAsJsonAsync<VagterDTO>("api/Vagt", nyVagt);
         await OnInitializedAsync();
     }
     private async Task putVagt()

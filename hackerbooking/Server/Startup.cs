@@ -17,7 +17,11 @@ namespace hackerbooking.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<vagterService>();
+
+            services.AddTransient<LoginService>();
+            services.AddTransient<OpgaverService>();
+            services.AddTransient<FrivilligeService>();
+            services.AddTransient<VagterService>();
             services.AddSingleton<DapperConnector>();
             services.AddControllersWithViews();
             services.AddRazorPages();
