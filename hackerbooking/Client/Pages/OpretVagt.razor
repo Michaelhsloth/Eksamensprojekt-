@@ -118,7 +118,7 @@ else
         var nyEditVagt = vagt;
         nyEditVagt.opgave_navn = tempEditOpgave;
         nyEditVagt.vagt_id = tempId;
-        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagter/{nyEditVagt.vagt_id}", nyEditVagt);
+        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagt/{nyEditVagt.vagt_id}", nyEditVagt);
         await OnInitializedAsync();
     }
 
