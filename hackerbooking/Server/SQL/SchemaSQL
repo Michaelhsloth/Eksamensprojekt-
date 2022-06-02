@@ -1,0 +1,86 @@
+﻿-- Opret Bruger Tabel
+
+
+CREATE TABLE IF NOT EXISTS public.brugere
+(
+    telefon_nummer integer NOT NULL,
+    navn text COLLATE pg_catalog."default" NOT NULL,
+    email text COLLATE pg_catalog."default" NOT NULL,
+    efternavn text COLLATE pg_catalog."default" NOT NULL,
+    kompetence text COLLATE pg_catalog."default" NOT NULL,
+    "fødselsdag" date,
+    password character varying COLLATE pg_catalog."default" NOT NULL,
+    frivillig_id integer NOT NULL DEFAULT nextval('frivillig_frivillig_id_seq'::regclass),
+    koordinator boolean,
+    CONSTRAINT frivillig_pkey PRIMARY KEY (frivillig_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.brugere
+    OWNER to "Gamle";
+
+GRANT ALL ON TABLE public.brugere TO "Gamle";
+
+GRANT INSERT, SELECT, UPDATE ON TABLE public.brugere TO "Frivillig";
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public.brugere TO "Brugere";
+
+-- Opret Opgave Tabel 
+
+
+CREATE TABLE IF NOT EXISTS public.opgaver
+(
+    opgave_navn character varying COLLATE pg_catalog."default" NOT NULL,
+    opgave_id integer NOT NULL DEFAULT nextval('opgaver_opgave_id_seq'::regclass),
+    CONSTRAINT opgaver_pkey PRIMARY KEY (opgave_navn),
+    CONSTRAINT opgave_navn UNIQUE (opgave_navn)
+        INCLUDE(opgave_navn)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.opgaver
+    OWNER to "Gamle";
+
+GRANT ALL ON TABLE public.opgaver TO "Gamle";
+
+GRANT INSERT, SELECT, UPDATE ON TABLE public.opgaver TO "Frivillig";
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public.opgaver TO "Brugere";
+
+-- Oprat Vagt Tabel 
+
+-- Table: public.vagter
+
+-- DROP TABLE public.vagter;
+
+CREATE TABLE IF NOT EXISTS public.vagter
+(
+    frivillig_id integer,
+    opgave_navn character varying COLLATE pg_catalog."default",
+    vagt_id integer NOT NULL DEFAULT nextval('vagter_vagt_id_seq'::regclass),
+    dato_tid_start timestamp without time zone,
+    dato_tid_slut timestamp without time zone,
+    CONSTRAINT vagter_pkey PRIMARY KEY (vagt_id),
+    CONSTRAINT frivillig_id FOREIGN KEY (frivillig_id)
+        REFERENCES public.brugere (frivillig_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT opgave_navn FOREIGN KEY (opgave_navn)
+        REFERENCES public.opgaver (opgave_navn) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.vagter
+    OWNER to "Gamle";
+
+GRANT ALL ON TABLE public.vagter TO "Gamle";
+
+GRANT INSERT, SELECT, UPDATE ON TABLE public.vagter TO "Frivillig";
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public.vagter TO "Brugere";
