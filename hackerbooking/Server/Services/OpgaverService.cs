@@ -19,7 +19,6 @@ namespace hackerbooking.Server.Services
             var sql = "SELECT * FROM opgaver";
             using var connection = connector.Connect();
             var OpgaveList = connection.Query<OpgaverDTO>(sql);
-            //Console.WriteLine("service nået");
             return OpgaveList.ToList();
         }
 
@@ -29,7 +28,6 @@ namespace hackerbooking.Server.Services
             var sql = "DELETE FROM opgaver WHERE opgave_id = @ID";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
-            //Console.WriteLine("service nået");   
 
         }
 

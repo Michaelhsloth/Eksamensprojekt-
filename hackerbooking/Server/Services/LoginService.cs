@@ -20,7 +20,6 @@ namespace hackerbooking.Server.Services
             var sql = "SELECT * FROM brugere WHERE email = @EMAIL AND password = crypt(@PASSWORD, password)";
             using var connection = connector.Connect();
             var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
-            Console.WriteLine("service nået" + parameters);
             return FrivilligeList.ToList();
         }
     }

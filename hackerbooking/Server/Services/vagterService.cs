@@ -19,7 +19,6 @@ namespace hackerbooking.Server.Services
             using (var connection = connector.Connect())
             {
                 var vagtList = connection.Query<VagterDTO>(sql);
-                //Console.WriteLine("service nået");
                 return vagtList.ToList();
             }
         }
@@ -30,7 +29,6 @@ namespace hackerbooking.Server.Services
             var sql = "DELETE FROM vagter WHERE vagt_id = @ID";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
-            //Console.WriteLine("service nået");   
 
         }
 
@@ -45,7 +43,6 @@ namespace hackerbooking.Server.Services
         public async Task UpdateVagt(VagterDTO vagt)
         {
             var parameters = new { OPGAVE = vagt.opgave_navn, START = vagt.dato_tid_start, SLUT = vagt.dato_tid_slut, ID = vagt.vagt_id };
-            //Console.WriteLine($"{vagt.navn},{vagt.id},{vagt.tal}");
             var sql = "UPDATE vagter SET opgave_navn = @OPGAVE, dato_tid_start = @START, dato_tid_slut = @SLUT WHERE vagt_id = @ID";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
@@ -57,7 +54,6 @@ namespace hackerbooking.Server.Services
             var sql = "UPDATE vagter set frivillig_id = @FRIVILLIG WHERE vagt_id = @id";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
-            //Console.WriteLine("service nået");   
 
         }
     }

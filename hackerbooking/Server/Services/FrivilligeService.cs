@@ -18,7 +18,6 @@ namespace hackerbooking.Server.Services
             var sql = "SELECT * FROM brugere";
             using var connection = connector.Connect();
             var frivilligList = connection.Query<FrivilligeDTO>(sql);
-            //Console.WriteLine("service nået");
             return frivilligList.ToList();
         }
 
@@ -28,7 +27,6 @@ namespace hackerbooking.Server.Services
             var sql = "SELECT * FROM brugere WHERE frivillig_id = @id";
             using var connection = connector.Connect();
             var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
-            Console.WriteLine("service nået" + parameters);
             return FrivilligeList.ToList();
         }
 
@@ -46,7 +44,6 @@ namespace hackerbooking.Server.Services
             var sql = "UPDATE brugere set email = @EMAIL, password = crypt(@PASSWORD, gen_salt('bf')) WHERE frivillig_id = @ID";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
-            Console.WriteLine(parameters);
         }
     }
 }
