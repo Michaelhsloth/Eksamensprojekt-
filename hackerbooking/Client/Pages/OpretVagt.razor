@@ -25,7 +25,7 @@ else
         <br>
         <label>Opret Ny Opgave</label>
         <input @bind-value="opgave.opgave_navn" placeholder="string" />
-        <button class="btn btn-sm btn-primary" @onclick="@(()=>NyOpgave())">Opret Opgave</button>
+        <button class="btn btn-sm btn-primary" @onclick="@(()=>CreateOpgave())">Opret Opgave</button>
     </span>
     <br />
     <span>Start Tidspunkt: </span>
@@ -33,7 +33,7 @@ else
     <br />
     <span>Slut Tidspunkt: </span>
     <input type="datetime-local" @bind-value="vagt.dato_tid_slut" placeholder="DateTime" />
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">Opret Vagt</button>
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>CreateVagt(@vagt))">Opret Vagt</button>
     <p>Liste over entries</p>
     <table class="table table-responsive">
         <thead>
@@ -74,7 +74,7 @@ else
         <br />
         <span>Slut Tidspunkt: </span>
         <input type="datetime-local" @bind-value="@vagt.dato_tid_slut" placeholder="DateTime" />
-        <button class="btn btn-sm btn-primary" @onclick="@(()=>putVagt())">EDIT</button>
+        <button class="btn btn-sm btn-primary" @onclick="@(()=>UpdateVagt())">Edit</button>
     </div>
 }
 
@@ -106,19 +106,19 @@ else
         await OnInitializedAsync();
     }
 
-    private async Task postVagt(VagterDTO vagt)
+    private async Task CreateVagt(VagterDTO vagt)
     {
         var nyVagt = vagt;
         nyVagt.opgave_navn = tempOpgave;
         await Http.PostAsJsonAsync<VagterDTO>("api/Vagt", nyVagt);
         await OnInitializedAsync();
     }
-    private async Task putVagt()
+    private async Task UpdateVagt()
     {
         var nyEditVagt = vagt;
         nyEditVagt.opgave_navn = tempEditOpgave;
         nyEditVagt.vagt_id = tempId;
-        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagter/{nyEditVagt.vagt_id}", nyEditVagt);
+        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagt/{nyEditVagt.vagt_id}", nyEditVagt);
         await OnInitializedAsync();
     }
 
@@ -132,7 +132,7 @@ else
         tempEditOpgave = input;
     }
 
-    private async Task NyOpgave()
+    private async Task CreateOpgave()
     {
         await Http.PostAsJsonAsync<OpgaverDTO>("api/nyOpgave", opgave);
         await OnInitializedAsync();

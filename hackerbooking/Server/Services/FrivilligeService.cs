@@ -13,7 +13,7 @@ namespace hackerbooking.Server.Services
             connector = _connector;
         }
 
-        public List<FrivilligeDTO> HentFrivillige()
+        public List<FrivilligeDTO> GetFrivillige()
         {
             var sql = "SELECT * FROM brugere";
             using (var connection = connector.Connect())
@@ -24,17 +24,6 @@ namespace hackerbooking.Server.Services
             }
         }
 
-        public List<FrivilligeDTO> Login(string Email, string Password)
-        {
-            var parameters = new { EMAIL = Email, PASSWORD = Password };
-            var sql = "SELECT * FROM brugere WHERE email = @EMAIL AND password = crypt(@PASSWORD, password)";
-            using (var connection = connector.Connect())
-            {
-                var FrivilligeList = connection.Query<FrivilligeDTO>(sql, parameters);
-                Console.WriteLine("service nået" + parameters);
-                return FrivilligeList.ToList();
-            }
-        }
         public List<FrivilligeDTO> FindFrivillig(int id)
         {
             var parameters = new { ID = id };
@@ -47,7 +36,7 @@ namespace hackerbooking.Server.Services
             }
         }
 
-        public async Task PostFrivillig(FrivilligeDTO frivillig)
+        public async Task CreateFrivillig(FrivilligeDTO frivillig)
         {
             var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password, KOORDINATOR = frivillig.koordinator };
             var sql = "INSERT INTO brugere (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password, koordinator) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')), @KOORDINATOR)";

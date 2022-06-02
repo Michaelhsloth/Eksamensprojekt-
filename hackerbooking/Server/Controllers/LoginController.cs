@@ -19,7 +19,7 @@ namespace hackerbooking.Server.Controllers
         public List<FrivilligeDTO> FrivilligLogin(string Email, string Password)
         {
             Console.WriteLine("api nået" + Email + Password);
-            return _service.Login(Email, Password);
+            return _service.FrivilligLogin(Email, Password);
         }
     }
 }

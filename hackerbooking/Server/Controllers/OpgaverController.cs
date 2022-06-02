@@ -16,7 +16,7 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpGet("api/Opgaver")]
-        public List<OpgaverDTO> GetAllOpgaver()
+        public List<OpgaverDTO> GetOpgaver()
         {
             //Console.WriteLine("api nået");
             return _service.GetOpgaver();
@@ -32,9 +32,9 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpPost("api/nyOpgave")]
-        public async Task<IActionResult> NyOpgave(OpgaverDTO opgave)
+        public async Task<IActionResult> CreateOpgave(OpgaverDTO opgave)
         {
-            await _service.NyOpgave(opgave);
+            await _service.CreateOpgave(opgave);
             return NoContent();
         }
     }

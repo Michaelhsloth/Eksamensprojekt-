@@ -37,7 +37,7 @@ namespace hackerbooking.Server.Services
             }
         }
 
-        public async Task NyOpgave(OpgaverDTO opgave)
+        public async Task CreateOpgave(OpgaverDTO opgave)
         {
             var parameters = new { OPGAVE = opgave.opgave_navn };
             var sql = "INSERT INTO opgaver (opgave_navn) VALUES (@OPGAVE)";

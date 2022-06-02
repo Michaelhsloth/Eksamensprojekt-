@@ -13,7 +13,7 @@ namespace hackerbooking.Server.Services
             connector = _connector;
         }
 
-        public List<VagterDTO> getVagter()
+        public List<VagterDTO> GetVagter()
         {
             var sql = "SELECT * FROM vagter";
             using (var connection = connector.Connect())
@@ -21,17 +21,6 @@ namespace hackerbooking.Server.Services
                 var vagtList = connection.Query<VagterDTO>(sql);
                 //Console.WriteLine("service nået");
                 return vagtList.ToList();
-            }
-        }
-
-        public List<OpgaverDTO> GetOpgaver()
-        {
-            var sql = "SELECT * FROM opgaver";
-            using (var connection = connector.Connect())
-            {
-                var OpgaveList = connection.Query<OpgaverDTO>(sql);
-                //Console.WriteLine("service nået");
-                return OpgaveList.ToList();
             }
         }
 
@@ -47,7 +36,7 @@ namespace hackerbooking.Server.Services
             }
         }
 
-        public async Task postVagt(VagterDTO vagt)
+        public async Task CreateVagt(VagterDTO vagt)
         {
             var parameters = new { OPGAVE = vagt.opgave_navn, START = vagt.dato_tid_start, SLUT = vagt.dato_tid_slut };
             var sql = "INSERT INTO vagter (opgave_navn, dato_tid_start, dato_tid_slut) VALUES (@OPGAVE, @START, @SLUT)";
@@ -57,7 +46,7 @@ namespace hackerbooking.Server.Services
             }
         }
 
-        public async Task putVagt(VagterDTO vagt)
+        public async Task UpdateVagt(VagterDTO vagt)
         {
             var parameters = new { OPGAVE = vagt.opgave_navn, START = vagt.dato_tid_start, SLUT = vagt.dato_tid_slut, ID = vagt.vagt_id };
             //Console.WriteLine($"{vagt.navn},{vagt.id},{vagt.tal}");

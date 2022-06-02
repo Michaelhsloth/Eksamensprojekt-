@@ -16,10 +16,10 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpGet("api/Frivillige")]
-        public List<FrivilligeDTO> HentFrivillige()
+        public List<FrivilligeDTO> GetFrivillige()
         {
             //Console.WriteLine("api nået");
-            return _service.HentFrivillige();
+            return _service.GetFrivillige();
 
         }
 
@@ -32,10 +32,10 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpPost("api/Frivillig")]
-        public async Task<IActionResult> PostFrivillige(FrivilligeDTO frivillig)
+        public async Task<IActionResult> CreateFrivillige(FrivilligeDTO frivillig)
         {
             Console.WriteLine("Controlleren");
-            await _service.PostFrivillig(frivillig);
+            await _service.CreateFrivillig(frivillig);
             return NoContent();
         }
 

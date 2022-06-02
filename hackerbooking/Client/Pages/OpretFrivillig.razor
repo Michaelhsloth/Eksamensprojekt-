@@ -59,7 +59,7 @@ else
     <br />
     <input type="password" id="pword1" @bind-value="password1" />
 
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>PostFrivillig(@frivillig))">Opret Frivillig</button>
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>CreateFrivillig(@frivillig))">Opret Frivillig</button>
 
 }
 
@@ -76,7 +76,13 @@ else
 
     private FrivilligeDTO frivillig = new();
 
-    private async Task PostFrivillig(FrivilligeDTO frivillig)
+    protected override async Task OnInitializedAsync()
+    {
+        id = await localStorage.GetItemAsync<int>("id");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+    }
+
+    private async Task CreateFrivillig(FrivilligeDTO frivillig)
     {
         if (password0 == password1)
         {
@@ -84,15 +90,6 @@ else
             await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillig", frivillig);
             NavManager.NavigateTo("/Frivillige");
         }
-        else
-        {
-            Console.WriteLine(frivillig.koordinator);
-        }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        id = await localStorage.GetItemAsync<int>("id");
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
-    }
 }

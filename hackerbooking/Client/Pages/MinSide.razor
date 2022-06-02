@@ -2,6 +2,7 @@
 @using hackerbooking.Shared;
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
 
 <PageTitle>Min Side</PageTitle>
 
@@ -45,6 +46,12 @@ else
 
     private FrivilligeDTO frivillig = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var id = await localStorage.GetItemAsync<int>("id");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+    }
+
     private async Task UpdateFrivillig()
     {
         if (nyPassword0 == nyPassword1)
@@ -52,19 +59,10 @@ else
             frivillig.email = nyEmail;
             frivillig.password = nyPassword0;
             // Update frivillig
-            Console.WriteLine(frivillig.email);
-            Console.WriteLine(frivillig.password);
             await Http.PutAsJsonAsync($"api/updateFrivillig/{frivillige[0].frivillig_id}", frivillig);
-        }
-        else
-        {
-            // error
+
+            NavManager.NavigateTo("/MinSide");
         }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        var id = await localStorage.GetItemAsync<int>("id");
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
-    }
 }

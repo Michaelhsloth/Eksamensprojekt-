@@ -16,10 +16,10 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpGet("api/Vagter")]
-        public List<VagterDTO> getAllVagt()
+        public List<VagterDTO> GetVagt()
         {
             //Console.WriteLine("api nået");
-            return _service.getVagter();
+            return _service.GetVagter();
 
         }
 
@@ -32,16 +32,16 @@ namespace hackerbooking.Server.Controllers
         }
 
         [HttpPost("api/Vagt")]
-        public async Task<IActionResult> postVagt(VagterDTO vagt)
+        public async Task<IActionResult> CreateVagt(VagterDTO vagt)
         {
-            await _service.postVagt(vagt);
+            await _service.CreateVagt(vagt);
             return NoContent();
         }
 
         [HttpPut("api/Vagt/{id}")]
-        public async Task<IActionResult> putVagt(VagterDTO vagt)
+        public async Task<IActionResult> UpdateVagt(VagterDTO vagt)
         {
-            await _service.putVagt(vagt);
+            await _service.UpdateVagt(vagt);
             return NoContent();
         }
         [HttpPut("api/TagVagt/{id}")]
