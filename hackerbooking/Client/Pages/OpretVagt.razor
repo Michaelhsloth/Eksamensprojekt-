@@ -3,6 +3,12 @@
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
+
+<PageTitle>Opret Vagter</PageTitle>
+
+<!--Check om bruger er logget ind-->
+<!--Hvis de er tjek om de har adgang-->
+<!--Hvis adgang vis data-->
 @if (frivillige == null)
 {
     <p>Loading...</p>
@@ -58,6 +64,7 @@ else
             }
         </tbody>
     </table>
+    <!--vis div hvis der bliver trykket på "Edit" for de enkelte vagter-->
     <div hidden="@HideLabel">
         <span>
             Opgave:
@@ -67,7 +74,7 @@ else
                 <input type="radio" id="@item.opgave_navn" name="editOpgaver" value=@item.opgave_navn @onchange="@(() => UpdateEditOpgave(@item.opgave_navn))">
                 <label for="html">@item.opgave_navn</label>
             }
-
+            <br />
         </span>
         <span>Start Tidspunkt: </span>
         <input type="datetime-local" @bind-value="@vagt.dato_tid_start" placeholder="DateTime" />
@@ -92,12 +99,17 @@ else
     private int tempId;
     private int id;
 
+    private bool HideLabel { get; set; } = true;
+
     protected override async Task OnInitializedAsync()
     {
+        // Hent data
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagter");
         opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
 
+        // Hent id fra browser
         id = await localStorage.GetItemAsync<int>("id");
+        // Hent frivillig med id
         frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
     private async Task DeleteVagt(int id)
@@ -143,7 +155,6 @@ else
         await Http.DeleteAsync($"api/Opgave/{id}");
         await OnInitializedAsync();
     }
-    private bool HideLabel { get; set; } = true;
 
     private void Toggle(int id)
     {

@@ -20,6 +20,7 @@
 <br />
 <button class="btn btn-sm btn-primary" @onclick="@(()=>FrivilligLogin())">Login</button>
 
+<!--Tjekker om der er en bruger som er logget ind allerede og redirecter til /Vagter hvis der er-->
 @if (id != 0)
 {
     NavManager.NavigateTo("/Vagter");
@@ -36,15 +37,21 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Henter id fra browseren
         id = await localStorage.GetItemAsync<int>("id");
     }
 
     private async Task FrivilligLogin()
     {
+        // Henter frivillige hvor Email og Password macther
         frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/Login/Email{Email}Password{Password}");
 
         id = frivillige[0].frivillig_id;
+
+        // Gemmer id fra frivillig til browseren
         await localStorage.SetItemAsync("id", frivillige[0].frivillig_id);
+
+        // Redirecter til /Vagter
         NavManager.NavigateTo("/Vagter");
     }
 }

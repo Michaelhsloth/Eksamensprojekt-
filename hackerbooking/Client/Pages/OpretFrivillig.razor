@@ -5,6 +5,9 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Opret Frivillig</PageTitle>
+<!--Check om bruger er logget ind-->
+<!--Hvis de er tjek om de har adgang-->
+<!--Hvis adgang vis data-->
 @if (frivillige == null)
 {
     <p>Loading...</p>
@@ -78,18 +81,23 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Hent id fra browser
         id = await localStorage.GetItemAsync<int>("id");
+        // Hent data fra bruger med id som bruges til at se om de har adgang
         frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
 
     private async Task CreateFrivillig(FrivilligeDTO frivillig)
     {
+        // Tjek om det to passwords fra inputs er det samme
         if (password0 == password1)
         {
+            // Sæt password fra input til objectet
             frivillig.password = password0;
+            // Post Objectet
             await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillig", frivillig);
+            // Redirect til /Frivillige
             NavManager.NavigateTo("/Frivillige");
         }
     }
-
 }

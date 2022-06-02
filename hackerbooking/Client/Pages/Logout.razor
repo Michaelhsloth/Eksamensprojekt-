@@ -9,6 +9,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
+        // logger brugeren ud og redirecter til start siden(login)
         await localStorage.RemoveItemAsync("id");
         NavManager.NavigateTo("/");
     }
