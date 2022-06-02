@@ -7,6 +7,8 @@
 
 <h1>Tilgængelige Vagter</h1>
 
+<!--Check om der er noget data-->
+<!--Hvis der er data vis det-->
 @if (vagter == null)
 {
     <p><em>Loading...</em></p>
@@ -15,7 +17,6 @@
 
 else
 {
-    <h3>Du har Id: @frivillig.frivillig_id</h3>
     <table class="table table-responsive">
         <thead>
             <tr>
@@ -27,7 +28,7 @@ else
         <tbody>
             @foreach (var item in vagter)
             {
-                // kun vis de vagter der ikke har nogen frivillige på
+                // Kun vis de vagter der ikke har nogen frivillige på
                 if (item.frivillig_id == 0)
                 {
                     <tr>
@@ -54,7 +55,7 @@ else
         <tbody>
             @foreach (var item in vagter)
             {
-                // kun vis de vagter der matcher dit id (Dem du har taget)
+                // Kun vis de vagter der matcher dit id (Dem du har taget)
                 if (item.frivillig_id == frivillig.frivillig_id)
                 {
                     <tr>

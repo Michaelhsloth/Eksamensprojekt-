@@ -6,11 +6,12 @@
 
 <h1>Liste Over Frivillige</h1>
 
+<!--Check om der er noget data-->
+<!--Hvis der er data vis det-->
 @if (frivillige == null)
 {
     <p>Loading...</p>
 }
-
 
 else
 {
@@ -21,17 +22,19 @@ else
                 <th>Efternavn</th>
                 <th>Email</th>
                 <th>Kompetence</th>
+                <th>Koordinator</th>
             </tr>
         </thead>
         <tbody>
+            <!--Foreach med liste over frivillige-->
             @foreach (var item in frivillige)
             {
-                // kun vis de vagter der ikke har nogen frivillige på
                 <tr>
                     <td>@item.navn</td>
                     <td>@item.efternavn</td>
                     <td>@item.email</td>
                     <td>@item.kompetence</td>
+                    <td>@item.koordinator</td>
                 </tr>
             }
         </tbody>

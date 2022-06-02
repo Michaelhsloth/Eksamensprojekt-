@@ -3,6 +3,12 @@
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
+
+<PageTitle>Opret Vagter</PageTitle>
+
+<!--Check om bruger er logget ind-->
+<!--Hvis de er tjek om de har adgang-->
+<!--Hvis adgang vis data-->
 @if (frivillige == null)
 {
     <p>Loading...</p>
@@ -25,7 +31,7 @@ else
         <br>
         <label>Opret Ny Opgave</label>
         <input @bind-value="opgave.opgave_navn" placeholder="string" />
-        <button class="btn btn-sm btn-primary" @onclick="@(()=>NyOpgave())">Opret Opgave</button>
+        <button class="btn btn-sm btn-primary" @onclick="@(()=>CreateOpgave())">Opret Opgave</button>
     </span>
     <br />
     <span>Start Tidspunkt: </span>
@@ -33,7 +39,7 @@ else
     <br />
     <span>Slut Tidspunkt: </span>
     <input type="datetime-local" @bind-value="vagt.dato_tid_slut" placeholder="DateTime" />
-    <button class="btn btn-sm btn-primary" @onclick="@(()=>postVagt(@vagt))">Opret Vagt</button>
+    <button class="btn btn-sm btn-primary" @onclick="@(()=>CreateVagt(@vagt))">Opret Vagt</button>
     <p>Liste over entries</p>
     <table class="table table-responsive">
         <thead>
@@ -58,6 +64,7 @@ else
             }
         </tbody>
     </table>
+    <!--vis div hvis der bliver trykket på "Edit" for de enkelte vagter-->
     <div hidden="@HideLabel">
         <span>
             Opgave:
@@ -67,14 +74,14 @@ else
                 <input type="radio" id="@item.opgave_navn" name="editOpgaver" value=@item.opgave_navn @onchange="@(() => UpdateEditOpgave(@item.opgave_navn))">
                 <label for="html">@item.opgave_navn</label>
             }
-
+            <br />
         </span>
         <span>Start Tidspunkt: </span>
         <input type="datetime-local" @bind-value="@vagt.dato_tid_start" placeholder="DateTime" />
         <br />
         <span>Slut Tidspunkt: </span>
         <input type="datetime-local" @bind-value="@vagt.dato_tid_slut" placeholder="DateTime" />
-        <button class="btn btn-sm btn-primary" @onclick="@(()=>putVagt())">EDIT</button>
+        <button class="btn btn-sm btn-primary" @onclick="@(()=>UpdateVagt())">Edit</button>
     </div>
 }
 
@@ -92,12 +99,17 @@ else
     private int tempId;
     private int id;
 
+    private bool HideLabel { get; set; } = true;
+
     protected override async Task OnInitializedAsync()
     {
+        // Hent data
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagter");
         opgaver = await Http.GetFromJsonAsync<OpgaverDTO[]>("api/Opgaver");
 
+        // Hent id fra browser
         id = await localStorage.GetItemAsync<int>("id");
+        // Hent frivillig med id
         frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
     private async Task DeleteVagt(int id)
@@ -106,14 +118,14 @@ else
         await OnInitializedAsync();
     }
 
-    private async Task postVagt(VagterDTO vagt)
+    private async Task CreateVagt(VagterDTO vagt)
     {
         var nyVagt = vagt;
         nyVagt.opgave_navn = tempOpgave;
         await Http.PostAsJsonAsync<VagterDTO>("api/Vagt", nyVagt);
         await OnInitializedAsync();
     }
-    private async Task putVagt()
+    private async Task UpdateVagt()
     {
         var nyEditVagt = vagt;
         nyEditVagt.opgave_navn = tempEditOpgave;
@@ -132,7 +144,7 @@ else
         tempEditOpgave = input;
     }
 
-    private async Task NyOpgave()
+    private async Task CreateOpgave()
     {
         await Http.PostAsJsonAsync<OpgaverDTO>("api/nyOpgave", opgave);
         await OnInitializedAsync();
@@ -143,7 +155,6 @@ else
         await Http.DeleteAsync($"api/Opgave/{id}");
         await OnInitializedAsync();
     }
-    private bool HideLabel { get; set; } = true;
 
     private void Toggle(int id)
     {

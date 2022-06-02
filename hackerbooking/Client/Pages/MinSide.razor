@@ -7,6 +7,8 @@
 
 <h1>Min Side</h1>
 
+<!--Check om der er noget data-->
+<!--Hvis der er data vis det-->
 @if (frivillige == null)
 {
     <p><em>Loading...</em></p>
@@ -45,26 +47,25 @@ else
 
     private FrivilligeDTO frivillig = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Hent id fra browser
+        var id = await localStorage.GetItemAsync<int>("id");
+        // Hent frivillig hvor id er det samme
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+    }
+
     private async Task UpdateFrivillig()
     {
+        // Tjekker om passwords fra de to inputs er det samme
         if (nyPassword0 == nyPassword1)
         {
             frivillig.email = nyEmail;
             frivillig.password = nyPassword0;
-            // Update frivillig
-            Console.WriteLine(frivillig.email);
-            Console.WriteLine(frivillig.password);
+            // Updater frivillig med ny data
             await Http.PutAsJsonAsync($"api/updateFrivillig/{frivillige[0].frivillig_id}", frivillig);
+            // Hent nyt data
+            await OnInitializedAsync();
         }
-        else
-        {
-            // error
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var id = await localStorage.GetItemAsync<int>("id");
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
     }
 }
