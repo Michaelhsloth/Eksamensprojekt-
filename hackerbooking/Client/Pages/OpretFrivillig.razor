@@ -73,7 +73,7 @@ else
     private string? password0;
     private string? password1;
 
-    private int id;
+    private int id { get; set; }
 
     private FrivilligeDTO[] frivillige;
 
@@ -84,7 +84,7 @@ else
         // Hent id fra browser
         id = await localStorage.GetItemAsync<int>("id");
         // Hent data fra bruger med id som bruges til at se om de har adgang
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/Frivillige/{id}");
     }
 
     private async Task CreateFrivillig(FrivilligeDTO frivillig)
@@ -95,7 +95,7 @@ else
             // Sæt password fra input til objectet
             frivillig.password = password0;
             // Post Objectet
-            await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillig", frivillig);
+            await Http.PostAsJsonAsync<FrivilligeDTO>("api/Frivillige", frivillig);
             // Redirect til /Frivillige
             NavManager.NavigateTo("/Frivillige");
         }

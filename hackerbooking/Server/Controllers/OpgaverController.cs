@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hackerbooking.Server.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
 
     public class OpgaverController : ControllerBase
     {
@@ -15,23 +16,21 @@ namespace hackerbooking.Server.Controllers
             _service = service;
         }
 
-        [HttpGet("api/Opgaver")]
+        [HttpGet]
         public List<OpgaverDTO> GetOpgaver()
         {
-            //Console.WriteLine("api nået");
             return _service.GetOpgaver();
 
         }
 
-        [HttpDelete("api/Opgave/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOpgave(int id)
         {
-            Console.WriteLine("api nået" + id);
             await _service.DeleteOpgave(id);
             return NoContent();
         }
 
-        [HttpPost("api/nyOpgave")]
+        [HttpPost]
         public async Task<IActionResult> CreateOpgave(OpgaverDTO opgave)
         {
             await _service.CreateOpgave(opgave);

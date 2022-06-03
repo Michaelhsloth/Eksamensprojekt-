@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hackerbooking.Server.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
 
     public class LoginController : ControllerBase
     {
@@ -15,11 +16,10 @@ namespace hackerbooking.Server.Controllers
             _service = service;
         }
 
-        [HttpGet("api/Login/Email{Email}Password{Password}")]
-        public List<FrivilligeDTO> FrivilligLogin(string Email, string Password)
+        [HttpGet("Email{Email}Password{Password}")]
+        public List<FrivilligeDTO> FrivilligLogin(string email, string password)
         {
-            Console.WriteLine("api nået" + Email + Password);
-            return _service.FrivilligLogin(Email, Password);
+            return _service.FrivilligLogin(email, password);
         }
     }
 }
