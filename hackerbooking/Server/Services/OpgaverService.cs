@@ -10,7 +10,6 @@ namespace hackerbooking.Server.Services
 
         public OpgaverService(DapperConnector _connector)
         {
-
             connector = _connector;
         }
 

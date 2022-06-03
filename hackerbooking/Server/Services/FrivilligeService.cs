@@ -33,6 +33,7 @@ namespace hackerbooking.Server.Services
         public async Task CreateFrivillig(FrivilligeDTO frivillig)
         {
             var parameters = new { TELEFON = frivillig.telefon_nummer, NAVN = frivillig.navn, EFTERNAVN = frivillig.efternavn, EMAIL = frivillig.email, KOMPETENCE = frivillig.kompetence, FØDSELSDAG = frivillig.fødselsdag, PASSWORD = frivillig.password, KOORDINATOR = frivillig.koordinator };
+            //  Bruger Blowfish salt til at hashe password
             var sql = "INSERT INTO brugere (telefon_nummer, navn, efternavn, email, kompetence, fødselsdag, password, koordinator) VALUES (@TELEFON, @NAVN, @EFTERNAVN, @EMAIL, @KOMPETENCE, @FØDSELSDAG, crypt(@PASSWORD, gen_salt('bf')), @KOORDINATOR)";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
@@ -41,6 +42,7 @@ namespace hackerbooking.Server.Services
         public async Task UpdateFrivillig(int id, FrivilligeDTO frivillig)
         {
             var parameters = new { ID = id, EMAIL = frivillig.email, PASSWORD = frivillig.password };
+            //  Bruger Blowfish salt til at hashe password
             var sql = "UPDATE brugere set email = @EMAIL, password = crypt(@PASSWORD, gen_salt('bf')) WHERE frivillig_id = @ID";
             using var connection = connector.Connect();
             await connection.ExecuteAsync(sql, parameters);
