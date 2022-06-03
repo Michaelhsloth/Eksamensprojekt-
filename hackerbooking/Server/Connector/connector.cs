@@ -9,6 +9,7 @@ namespace hackerbooking.Server.Connector
         public DapperConnector(IConfiguration configuration)
         {
             _configuration = configuration;
+            // Får connection fra appsettings.json
             connString = _configuration.GetConnectionString("NpgSql_Connection");
         }
         public IDbConnection Connect()
