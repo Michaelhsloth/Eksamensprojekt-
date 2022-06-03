@@ -16,11 +16,9 @@ namespace hackerbooking.Server.Services
         public List<VagterDTO> GetVagter()
         {
             var sql = "SELECT * FROM vagter";
-            using (var connection = connector.Connect())
-            {
-                var vagtList = connection.Query<VagterDTO>(sql);
-                return vagtList.ToList();
-            }
+            using var connection = connector.Connect();
+            var vagtList = connection.Query<VagterDTO>(sql);
+            return vagtList.ToList();
         }
 
         public async Task DeleteVagt(int id)
