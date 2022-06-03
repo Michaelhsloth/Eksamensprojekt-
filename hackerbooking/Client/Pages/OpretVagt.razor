@@ -24,6 +24,7 @@ else
         @foreach (var item in opgaver)
         {
             <br>
+            <!--Sender navnet på den valgte opgave videre til UpdateOpgave hver gang der sker en ændring-->
             <input type="radio" id="@item.opgave_navn" name="opgaver" value=@item.opgave_navn @onchange="@(() => UpdateOpgave(@item.opgave_navn))">
             <label for="html">@item.opgave_navn</label>
             <button @onclick="@(() => DeleteOpgave(@item.opgave_id))">Slet</button>
@@ -45,6 +46,7 @@ else
         <thead>
             <tr>
                 <th>Opgave</th>
+                <th>Vagt taget af frivillig med id</th>
                 <th>Start</th>
                 <th>Slut</th>
             </tr>
@@ -54,10 +56,11 @@ else
             {
                 <tr>
                     <td>@item.opgave_navn</td>
+                    <td>@item.frivillig_id</td>
                     <td>@item.dato_tid_start</td>
                     <td>@item.dato_tid_slut</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" @onclick="@(()=>Toggle(@item.vagt_id))">Edit</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(()=>ToggleEdit(@item.vagt_id))">Edit</button>
                         <button class="btn btn-sm btn-primary" @onclick="@(()=>DeleteVagt(@item.vagt_id))">Delete</button>
                     </td>
                 </tr>
@@ -65,22 +68,23 @@ else
         </tbody>
     </table>
     <!--vis div hvis der bliver trykket på "Edit" for de enkelte vagter-->
-    <div hidden="@HideLabel">
+    <div id="edit" hidden="@hideLabel">
         <span>
             Opgave:
             @foreach (var item in opgaver)
             {
                 <br>
-                <input type="radio" id="@item.opgave_navn" name="editOpgaver" value=@item.opgave_navn @onchange="@(() => UpdateEditOpgave(@item.opgave_navn))">
+                <!--Sender navnet på den valgte opgave videre til UpdateEditOpgave hver gang der sker en ændring-->
+                <input type="radio" id="@item.opgave_navn" name="editOpgaver" value=@item.opgave_navn @onchange="@(()=>UpdateEditOpgave(@item.opgave_navn))">
                 <label for="html">@item.opgave_navn</label>
             }
             <br />
         </span>
         <span>Start Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.dato_tid_start" placeholder="DateTime" />
+        <input type="datetime-local" @bind-value="@editVagt.dato_tid_start" placeholder="DateTime" />
         <br />
         <span>Slut Tidspunkt: </span>
-        <input type="datetime-local" @bind-value="@vagt.dato_tid_slut" placeholder="DateTime" />
+        <input type="datetime-local" @bind-value="@editVagt.dato_tid_slut" placeholder="DateTime" />
         <button class="btn btn-sm btn-primary" @onclick="@(()=>UpdateVagt())">Edit</button>
     </div>
 }
@@ -90,16 +94,16 @@ else
     private OpgaverDTO[] opgaver;
     private FrivilligeDTO[] frivillige;
 
+    // To objekter fra VagterDTO klassen
+    // Den ene bruges til at lave nye vagter den anden til at ændre på dem
     private VagterDTO vagt = new();
+    private VagterDTO editVagt = new();
+
     private OpgaverDTO opgave = new();
 
-    private string tempOpgave;
-    private string tempEditOpgave;
+    private int id { get; set; }
 
-    private int tempId;
-    private int id;
-
-    private bool HideLabel { get; set; } = true;
+    private bool hideLabel { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,55 +114,56 @@ else
         // Hent id fra browser
         id = await localStorage.GetItemAsync<int>("id");
         // Hent frivillig med id
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/Frivillige/{id}");
     }
     private async Task DeleteVagt(int id)
     {
-        await Http.DeleteAsync($"api/Vagt/{id}");
+        await Http.DeleteAsync($"api/Vagter/{id}");
         await OnInitializedAsync();
     }
 
     private async Task CreateVagt(VagterDTO vagt)
     {
-        var nyVagt = vagt;
-        nyVagt.opgave_navn = tempOpgave;
-        await Http.PostAsJsonAsync<VagterDTO>("api/Vagt", nyVagt);
+
+        await Http.PostAsJsonAsync<VagterDTO>("api/Vagter", vagt);
         await OnInitializedAsync();
     }
+
     private async Task UpdateVagt()
     {
-        var nyEditVagt = vagt;
-        nyEditVagt.opgave_navn = tempEditOpgave;
-        nyEditVagt.vagt_id = tempId;
-        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagt/{nyEditVagt.vagt_id}", nyEditVagt);
+        await Http.PutAsJsonAsync<VagterDTO>($"api/Vagter/{editVagt.vagt_id}", editVagt);
         await OnInitializedAsync();
     }
 
-    private void UpdateOpgave(string input)
+    // Updatere vagt.opgave_navn med opgave_navn fra den valgte opgave
+    private void UpdateOpgave(string opgave_navn)
     {
-        tempOpgave = input;
+        vagt.opgave_navn = opgave_navn;
     }
 
-    private void UpdateEditOpgave(string input)
+    // Updatere editVagt.opgave_navn med opgave_navn fra den valgte opgave
+    private void UpdateEditOpgave(string opgave_navn)
     {
-        tempEditOpgave = input;
+        editVagt.opgave_navn = opgave_navn;
     }
 
     private async Task CreateOpgave()
     {
-        await Http.PostAsJsonAsync<OpgaverDTO>("api/nyOpgave", opgave);
+        await Http.PostAsJsonAsync<OpgaverDTO>("api/Opgaver", opgave);
         await OnInitializedAsync();
     }
 
     private async Task DeleteOpgave(int id)
     {
-        await Http.DeleteAsync($"api/Opgave/{id}");
+        await Http.DeleteAsync($"api/Opgaver/{id}");
         await OnInitializedAsync();
     }
 
-    private void Toggle(int id)
+    // Bruges til at skjule eller vise edit Div
+    // Og sætte editVagt.vagt_id til id fra den valgte vagt
+    private void ToggleEdit(int id)
     {
-        tempId = id;
-        HideLabel = !HideLabel;
+        editVagt.vagt_id = id;
+        hideLabel = !hideLabel;
     }
 }

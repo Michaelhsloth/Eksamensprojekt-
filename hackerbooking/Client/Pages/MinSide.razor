@@ -52,7 +52,7 @@ else
         // Hent id fra browser
         var id = await localStorage.GetItemAsync<int>("id");
         // Hent frivillig hvor id er det samme
-        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/FindFrivillig{id}");
+        frivillige = await Http.GetFromJsonAsync<FrivilligeDTO[]>($"api/Frivillige/{id}");
     }
 
     private async Task UpdateFrivillig()
@@ -63,7 +63,7 @@ else
             frivillig.email = nyEmail;
             frivillig.password = nyPassword0;
             // Updater frivillig med ny data
-            await Http.PutAsJsonAsync($"api/updateFrivillig/{frivillige[0].frivillig_id}", frivillig);
+            await Http.PutAsJsonAsync($"api/Frivillige/{frivillige[0].frivillig_id}", frivillig);
             // Hent nyt data
             await OnInitializedAsync();
         }

@@ -86,7 +86,7 @@ else
     private async Task TagVagt(int id)
     {
         // Tilføj frivillig_id til den valgte vagt
-        await Http.PutAsJsonAsync<FrivilligeDTO>($"api/TagVagt/{id}", frivillig);
+        await Http.PutAsJsonAsync<FrivilligeDTO>($"api/Vagter/Tag/{id}", frivillig);
         vagter = await Http.GetFromJsonAsync<VagterDTO[]>("api/Vagter");
     }
 }
